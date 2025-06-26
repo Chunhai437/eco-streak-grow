@@ -78,6 +78,12 @@ const Header = () => {
                       </p>
                     </div>
                   </div>
+                  <Link to="/profile">
+                    <DropdownMenuItem>
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Thông tin cá nhân</span>
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Đăng xuất</span>
