@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, 
@@ -29,6 +30,14 @@ const Admin = () => {
     category: '',
     points: 0
   });
+
+  const [editingHabit, setEditingHabit] = useState({
+    id: 0,
+    name: '',
+    description: ''
+  });
+
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const [newEvent, setNewEvent] = useState({
     title: '',
@@ -86,6 +95,27 @@ const Admin = () => {
     });
     
     setNewHabit({ name: '', description: '', category: '', points: 0 });
+  };
+
+  const handleEditHabit = (habit) => {
+    setEditingHabit({
+      id: habit.id,
+      name: habit.name,
+      description: habit.description
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateHabit = () => {
+    if (!editingHabit.name || !editingHabit.description) return;
+    
+    toast({
+      title: "Cập nhật thói quen thành công!",
+      description: `Thói quen "${editingHabit.name}" đã được cập nhật.`,
+    });
+    
+    setIsEditDialogOpen(false);
+    setEditingHabit({ id: 0, name: '', description: '' });
   };
 
   const handleCreateEvent = () => {
@@ -203,7 +233,11 @@ const Admin = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleEditHabit(habit)}
+                        >
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
@@ -422,6 +456,51 @@ const Admin = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Edit Habit Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-green-800">Chỉnh sửa thói quen</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Tên thói quen
+                </label>
+                <Input
+                  placeholder="Tên thói quen"
+                  value={editingHabit.name}
+                  onChange={(e) => setEditingHabit({...editingHabit, name: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Mô tả
+                </label>
+                <Textarea
+                  placeholder="Mô tả thói quen"
+                  value={editingHabit.description}
+                  onChange={(e) => setEditingHabit({...editingHabit, description: e.target.value})}
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsEditDialogOpen(false)}
+                >
+                  Hủy
+                </Button>
+                <Button 
+                  onClick={handleUpdateHabit}
+                  className="gradient-green text-white"
+                >
+                  Cập nhật
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
