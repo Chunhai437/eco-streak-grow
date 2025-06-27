@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, Circle, Trophy, Gift } from 'lucide-react';
 
@@ -75,6 +76,14 @@ const Habits = () => {
 
   const [dailyChecks, setDailyChecks] = useState<Record<number, boolean>>({});
 
+  const [newChallenge, setNewChallenge] = useState({
+    title: '',
+    targetDay: '',
+    habitId: 0
+  });
+  
+  const [isChallengeDialogOpen, setIsChallengeDialogOpen] = useState(false);
+
   const handleDailyCheck = (challengeId: number) => {
     setDailyChecks(prev => ({
       ...prev,
@@ -88,6 +97,46 @@ const Habits = () => {
         description: `Bạn đã nhận ${challenge.rewards.dailyPoints} điểm!`,
       });
     }
+  };
+
+  const handleCreateChallenge = (habitId: number) => {
+    setNewChallenge({
+      title: '',
+      targetDay: '',
+      habitId: habitId
+    });
+    setIsChallengeDialogOpen(true);
+  };
+
+  const handleSubmitChallenge = () => {
+    if (!newChallenge.title || !newChallenge.targetDay) {
+      toast({
+        title: "Lỗi!",
+        description: "Vui lòng điền đầy đủ thông tin.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const targetDays = parseInt(newChallenge.targetDay);
+    if (isNaN(targetDays) || targetDays <= 0) {
+      toast({
+        title: "Lỗi!",
+        description: "Số ngày phải là một số dương.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const habit = habits.find(h => h.id === newChallenge.habitId);
+    
+    toast({
+      title: "Tạo thử thách thành công!",
+      description: `Thử thách "${newChallenge.title}" trong ${targetDays} ngày từ thói quen "${habit?.name}" đã được tạo.`,
+    });
+    
+    setIsChallengeDialogOpen(false);
+    setNewChallenge({ title: '', targetDay: '', habitId: 0 });
   };
 
   const renderPlantProgress = (streak: number, total: number) => {
@@ -261,12 +310,7 @@ const Habits = () => {
                   <CardContent>
                     <Button 
                       className="w-full gradient-green text-white"
-                      onClick={() => {
-                        toast({
-                          title: "Tạo thử thách thành công!",
-                          description: `Bạn đã tạo thử thách từ thói quen "${habit.name}"`,
-                        });
-                      }}
+                      onClick={() => handleCreateChallenge(habit.id)}
                     >
                       Tạo thử thách
                     </Button>
@@ -324,6 +368,53 @@ const Habits = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Create Challenge Dialog */}
+        <Dialog open={isChallengeDialogOpen} onOpenChange={setIsChallengeDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-green-800">Tạo thử thách mới</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Tên thử thách
+                </label>
+                <Input
+                  placeholder="Nhập tên thử thách"
+                  value={newChallenge.title}
+                  onChange={(e) => setNewChallenge({...newChallenge, title: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Số ngày thực hiện
+                </label>
+                <Input
+                  type="number"
+                  placeholder="Nhập số ngày (ví dụ: 30)"
+                  value={newChallenge.targetDay}
+                  onChange={(e) => setNewChallenge({...newChallenge, targetDay: e.target.value})}
+                  min="1"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsChallengeDialogOpen(false)}
+                >
+                  Hủy
+                </Button>
+                <Button 
+                  onClick={handleSubmitChallenge}
+                  className="gradient-green text-white"
+                >
+                  Tạo thử thách
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
