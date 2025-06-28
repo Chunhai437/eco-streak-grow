@@ -47,16 +47,72 @@ const Admin = () => {
     type: 'Sự kiện cộng đồng'
   });
 
+  const [newPlace, setNewPlace] = useState({
+    name: '',
+    description: '',
+    type: 'coffee',
+    address: '',
+    latitude: 0,
+    longitude: 0,
+    image: '',
+    greenTags: '',
+    voucherName: '',
+    voucherDescription: '',
+    pointsRequired: 0
+  });
+
+  const [editingPlace, setEditingPlace] = useState({
+    id: 0,
+    name: '',
+    description: '',
+    type: 'coffee',
+    address: '',
+    latitude: 0,
+    longitude: 0,
+    image: '',
+    greenTags: '',
+    voucherName: '',
+    voucherDescription: '',
+    pointsRequired: 0
+  });
+
+  const [isEditPlaceDialogOpen, setIsEditPlaceDialogOpen] = useState(false);
+
   const [habits] = useState([
     { id: 1, name: "Mang túi vải", description: "Giảm sử dụng túi nilon", category: "Mua sắm xanh", points: 10, usage: 245 },
     { id: 2, name: "Tắt điện", description: "Tiết kiệm năng lượng", category: "Tiết kiệm điện", points: 5, usage: 189 },
     { id: 3, name: "Mang chai nước", description: "Giảm rác thải nhựa", category: "Giảm rác thải", points: 15, usage: 356 }
   ]);
 
-  const [places] = useState([
-    { id: 1, name: "Green Cafe", type: "Quán cafe", status: "Hoạt động", vouchers: 4, reviews: 124 },
-    { id: 2, name: "Eco Market", type: "Siêu thị", status: "Hoạt động", vouchers: 6, reviews: 89 },
-    { id: 3, name: "Urban Garden", type: "Nhà hàng", status: "Chờ duyệt", vouchers: 3, reviews: 203 }
+  const [places, setPlaces] = useState([
+    { 
+      id: 1, 
+      name: "Green Cafe", 
+      description: "Quán thân thiện môi trường", 
+      type: "coffee", 
+      address: "123 Nguyễn Trãi, Q.5, TP.HCM",
+      latitude: 10.762622,
+      longitude: 106.660172,
+      image: "https://res.cloudinary.com/abc/image/upload/v1/sample.jpg",
+      greenTags: ["tái chế", "thân thiện môi trường"],
+      status: "Hoạt động", 
+      vouchers: 4, 
+      reviews: 124 
+    },
+    { 
+      id: 2, 
+      name: "Eco Market", 
+      description: "Siêu thị xanh", 
+      type: "market", 
+      address: "456 Lê Lợi, Q.1, TP.HCM",
+      latitude: 10.773245,
+      longitude: 106.701583,
+      image: "https://res.cloudinary.com/abc/image/upload/v1/sample2.jpg",
+      greenTags: ["organic", "zero waste"],
+      status: "Hoạt động", 
+      vouchers: 6, 
+      reviews: 89 
+    }
   ]);
 
   const [events] = useState([
@@ -127,6 +183,139 @@ const Admin = () => {
     });
     
     setNewEvent({ title: '', description: '', location: '', date: '', type: 'Sự kiện cộng đồng' });
+  };
+
+  const handleCreatePlace = () => {
+    if (!newPlace.name || !newPlace.description || !newPlace.address) {
+      toast({
+        title: "Lỗi!",
+        description: "Vui lòng điền đầy đủ thông tin bắt buộc.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const placeData = {
+      name: newPlace.name,
+      description: newPlace.description,
+      type: newPlace.type,
+      location: {
+        latitude: newPlace.latitude,
+        longitude: newPlace.longitude,
+        address: newPlace.address
+      },
+      image: newPlace.image,
+      greenTags: newPlace.greenTags.split(',').map(tag => tag.trim()).filter(tag => tag),
+      partnerVouchers: newPlace.voucherName ? [{
+        name: newPlace.voucherName,
+        description: newPlace.voucherDescription,
+        pointsRequired: newPlace.pointsRequired
+      }] : [],
+      reviews: []
+    };
+
+    console.log('Creating place with data:', placeData);
+    
+    toast({
+      title: "Tạo địa điểm thành công!",
+      description: `Địa điểm "${newPlace.name}" đã được thêm vào hệ thống.`,
+    });
+    
+    setNewPlace({
+      name: '',
+      description: '',
+      type: 'coffee',
+      address: '',
+      latitude: 0,
+      longitude: 0,
+      image: '',
+      greenTags: '',
+      voucherName: '',
+      voucherDescription: '',
+      pointsRequired: 0
+    });
+  };
+
+  const handleEditPlace = (place) => {
+    setEditingPlace({
+      id: place.id,
+      name: place.name,
+      description: place.description,
+      type: place.type,
+      address: place.address,
+      latitude: place.latitude,
+      longitude: place.longitude,
+      image: place.image,
+      greenTags: place.greenTags.join(', '),
+      voucherName: '',
+      voucherDescription: '',
+      pointsRequired: 0
+    });
+    setIsEditPlaceDialogOpen(true);
+  };
+
+  const handleUpdatePlace = () => {
+    if (!editingPlace.name || !editingPlace.description || !editingPlace.address) {
+      toast({
+        title: "Lỗi!",
+        description: "Vui lòng điền đầy đủ thông tin bắt buộc.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const updatedPlaceData = {
+      name: editingPlace.name,
+      description: editingPlace.description,
+      type: editingPlace.type,
+      location: {
+        latitude: editingPlace.latitude,
+        longitude: editingPlace.longitude,
+        address: editingPlace.address
+      },
+      image: editingPlace.image,
+      greenTags: editingPlace.greenTags.split(',').map(tag => tag.trim()).filter(tag => tag),
+      partnerVouchers: editingPlace.voucherName ? [{
+        name: editingPlace.voucherName,
+        description: editingPlace.voucherDescription,
+        pointsRequired: editingPlace.pointsRequired
+      }] : []
+    };
+
+    console.log('Updating place with data:', updatedPlaceData);
+    
+    toast({
+      title: "Cập nhật địa điểm thành công!",
+      description: `Địa điểm "${editingPlace.name}" đã được cập nhật.`,
+    });
+    
+    setIsEditPlaceDialogOpen(false);
+    setEditingPlace({
+      id: 0,
+      name: '',
+      description: '',
+      type: 'coffee',
+      address: '',
+      latitude: 0,
+      longitude: 0,
+      image: '',
+      greenTags: '',
+      voucherName: '',
+      voucherDescription: '',
+      pointsRequired: 0
+    });
+  };
+
+  const handleDeletePlace = (placeId) => {
+    const place = places.find(p => p.id === placeId);
+    if (place) {
+      console.log('Deleting place:', placeId);
+      setPlaces(places.filter(p => p.id !== placeId));
+      toast({
+        title: "Xóa địa điểm thành công!",
+        description: `Địa điểm "${place.name}" đã được xóa khỏi hệ thống.`,
+      });
+    }
   };
 
   return (
@@ -252,6 +441,104 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="places" className="space-y-6 mt-6">
+            {/* Create New Place */}
+            <Card className="glass-effect">
+              <CardHeader>
+                <CardTitle className="text-green-800 flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  Tạo địa điểm xanh mới
+                </CardTitle>
+                <CardDescription>
+                  Thêm địa điểm thân thiện môi trường
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <Input
+                    placeholder="Tên địa điểm *"
+                    value={newPlace.name}
+                    onChange={(e) => setNewPlace({...newPlace, name: e.target.value})}
+                  />
+                  <select
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    value={newPlace.type}
+                    onChange={(e) => setNewPlace({...newPlace, type: e.target.value})}
+                  >
+                    <option value="coffee">Quán cà phê</option>
+                    <option value="restaurant">Nhà hàng</option>
+                    <option value="market">Siêu thị</option>
+                    <option value="store">Cửa hàng</option>
+                    <option value="other">Khác</option>
+                  </select>
+                </div>
+                <Textarea
+                  placeholder="Mô tả địa điểm *"
+                  value={newPlace.description}
+                  onChange={(e) => setNewPlace({...newPlace, description: e.target.value})}
+                />
+                <Input
+                  placeholder="Địa chỉ *"
+                  value={newPlace.address}
+                  onChange={(e) => setNewPlace({...newPlace, address: e.target.value})}
+                />
+                <div className="grid md:grid-cols-2 gap-4">
+                  <Input
+                    type="number"
+                    step="any"
+                    placeholder="Vĩ độ (latitude)"
+                    value={newPlace.latitude}
+                    onChange={(e) => setNewPlace({...newPlace, latitude: parseFloat(e.target.value) || 0})}
+                  />
+                  <Input
+                    type="number"
+                    step="any"
+                    placeholder="Kinh độ (longitude)"
+                    value={newPlace.longitude}
+                    onChange={(e) => setNewPlace({...newPlace, longitude: parseFloat(e.target.value) || 0})}
+                  />
+                </div>
+                <Input
+                  placeholder="URL hình ảnh"
+                  value={newPlace.image}
+                  onChange={(e) => setNewPlace({...newPlace, image: e.target.value})}
+                />
+                <Input
+                  placeholder="Thẻ xanh (cách nhau bởi dấu phẩy)"
+                  value={newPlace.greenTags}
+                  onChange={(e) => setNewPlace({...newPlace, greenTags: e.target.value})}
+                />
+                
+                {/* Voucher section */}
+                <div className="border-t pt-4">
+                  <h4 className="font-semibold text-gray-700 mb-3">Voucher đối tác (tùy chọn)</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <Input
+                      placeholder="Tên voucher"
+                      value={newPlace.voucherName}
+                      onChange={(e) => setNewPlace({...newPlace, voucherName: e.target.value})}
+                    />
+                    <Input
+                      type="number"
+                      placeholder="Điểm yêu cầu"
+                      value={newPlace.pointsRequired}
+                      onChange={(e) => setNewPlace({...newPlace, pointsRequired: parseInt(e.target.value) || 0})}
+                    />
+                  </div>
+                  <Textarea
+                    placeholder="Mô tả voucher"
+                    value={newPlace.voucherDescription}
+                    onChange={(e) => setNewPlace({...newPlace, voucherDescription: e.target.value})}
+                    className="mt-2"
+                  />
+                </div>
+
+                <Button onClick={handleCreatePlace} className="gradient-green text-white">
+                  Tạo địa điểm
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Existing Places */}
             <Card className="glass-effect">
               <CardHeader>
                 <CardTitle className="text-green-800">Danh sách địa điểm đối tác</CardTitle>
@@ -274,15 +561,35 @@ const Admin = () => {
                             {place.status}
                           </Badge>
                         </div>
+                        <p className="text-gray-600 text-sm mb-2">{place.description}</p>
+                        <div className="text-sm text-gray-600 mb-2">
+                          📍 {place.address}
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                          {place.greenTags.map((tag, index) => (
+                            <Badge key={index} variant="outline" className="text-green-600">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
                         <div className="text-sm text-gray-600">
                           {place.vouchers} voucher • {place.reviews} đánh giá
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleEditPlace(place)}
+                        >
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => handleDeletePlace(place.id)}
+                        >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
@@ -493,6 +800,168 @@ const Admin = () => {
                 </Button>
                 <Button 
                   onClick={handleUpdateHabit}
+                  className="gradient-green text-white"
+                >
+                  Cập nhật
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Place Dialog */}
+        <Dialog open={isEditPlaceDialogOpen} onOpenChange={setIsEditPlaceDialogOpen}>
+          <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-green-800">Chỉnh sửa địa điểm xanh</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Tên địa điểm *
+                  </label>
+                  <Input
+                    placeholder="Tên địa điểm"
+                    value={editingPlace.name}
+                    onChange={(e) => setEditingPlace({...editingPlace, name: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Loại địa điểm
+                  </label>
+                  <select
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    value={editingPlace.type}
+                    onChange={(e) => setEditingPlace({...editingPlace, type: e.target.value})}
+                  >
+                    <option value="coffee">Quán cà phê</option>
+                    <option value="restaurant">Nhà hàng</option>
+                    <option value="market">Siêu thị</option>
+                    <option value="store">Cửa hàng</option>
+                    <option value="other">Khác</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Mô tả *
+                </label>
+                <Textarea
+                  placeholder="Mô tả địa điểm"
+                  value={editingPlace.description}
+                  onChange={(e) => setEditingPlace({...editingPlace, description: e.target.value})}
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Địa chỉ *
+                </label>
+                <Input
+                  placeholder="Địa chỉ"
+                  value={editingPlace.address}
+                  onChange={(e) => setEditingPlace({...editingPlace, address: e.target.value})}
+                />
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Vĩ độ (Latitude)
+                  </label>
+                  <Input
+                    type="number"
+                    step="any"
+                    placeholder="Vĩ độ"
+                    value={editingPlace.latitude}
+                    onChange={(e) => setEditingPlace({...editingPlace, latitude: parseFloat(e.target.value) || 0})}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Kinh độ (Longitude)
+                  </label>
+                  <Input
+                    type="number"
+                    step="any"
+                    placeholder="Kinh độ"
+                    value={editingPlace.longitude}
+                    onChange={(e) => setEditingPlace({...editingPlace, longitude: parseFloat(e.target.value) || 0})}
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  URL hình ảnh
+                </label>
+                <Input
+                  placeholder="URL hình ảnh"
+                  value={editingPlace.image}
+                  onChange={(e) => setEditingPlace({...editingPlace, image: e.target.value})}
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Thẻ xanh (cách nhau bởi dấu phẩy)
+                </label>
+                <Input
+                  placeholder="tái chế, thân thiện môi trường"
+                  value={editingPlace.greenTags}
+                  onChange={(e) => setEditingPlace({...editingPlace, greenTags: e.target.value})}
+                />
+              </div>
+
+              <div className="border-t pt-4">
+                <h4 className="font-semibold text-gray-700 mb-3">Voucher đối tác (tùy chọn)</h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                      Tên voucher
+                    </label>
+                    <Input
+                      placeholder="Tên voucher"
+                      value={editingPlace.voucherName}
+                      onChange={(e) => setEditingPlace({...editingPlace, voucherName: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                      Điểm yêu cầu
+                    </label>
+                    <Input
+                      type="number"
+                      placeholder="Điểm yêu cầu"
+                      value={editingPlace.pointsRequired}
+                      onChange={(e) => setEditingPlace({...editingPlace, pointsRequired: parseInt(e.target.value) || 0})}
+                    />
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Mô tả voucher
+                  </label>
+                  <Textarea
+                    placeholder="Mô tả voucher"
+                    value={editingPlace.voucherDescription}
+                    onChange={(e) => setEditingPlace({...editingPlace, voucherDescription: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsEditPlaceDialogOpen(false)}
+                >
+                  Hủy
+                </Button>
+                <Button 
+                  onClick={handleUpdatePlace}
                   className="gradient-green text-white"
                 >
                   Cập nhật
