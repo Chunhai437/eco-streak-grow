@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, 
@@ -17,7 +18,8 @@ import {
   MapPin, 
   Calendar,
   TrendingUp,
-  Award
+  Award,
+  User
 } from 'lucide-react';
 
 const Admin = () => {
@@ -127,6 +129,54 @@ const Admin = () => {
     { label: "Địa điểm đối tác", value: "156", icon: MapPin, color: "text-purple-600" },
     { label: "Sự kiện tháng này", value: "23", icon: Calendar, color: "text-orange-600" }
   ];
+
+  // New user management state
+  const [users, setUsers] = useState([
+    {
+      _id: "685a9934123590436dcd9e00",
+      username: "chunhai27",
+      fullname: "Võ Nguyễn Trung Hải",
+      email: "chunhai27@gmail.com",
+      password: "$2a$10$JkgsOSii4jzwZLwhIkAVvOoYrq5q3AOA6F6m2lLpsH7Wnqb0ABnhS",
+      role: "user",
+      address: "123 Main St",
+      phoneNumber: "0876567897",
+      isVerified: true,
+      verificationToken: "157ffbb26179340ec1159c35b100ab51f0d6e4323562aa19fb2192b6aeb7f273",
+      createdAt: "2025-06-24T12:25:24.395Z",
+      updatedAt: "2025-06-24T12:25:24.395Z",
+      __v: 0
+    },
+    {
+      _id: "685a9f46e75f0bfa0680e9ba",
+      username: "johndoe",
+      fullname: "John Doe",
+      email: "johndoe@gmail.com",
+      password: "$2a$10$lvddOwIdwwm6JK2MAGYsA.a86BOMmOAONnh6r2hW22J5Kq.cTzr0m",
+      role: "admin",
+      address: "123 Main St",
+      phoneNumber: "0123456789",
+      isVerified: true,
+      verificationToken: "dc444a65463c09c097b5402354c42d02f81ee310c8ba838c44a1f631bc42fc7f",
+      createdAt: "2025-06-24T12:51:18.460Z",
+      updatedAt: "2025-06-24T12:51:18.460Z",
+      __v: 0,
+      firstLogin: true
+    }
+  ]);
+
+  const [editingUser, setEditingUser] = useState({
+    _id: '',
+    username: '',
+    fullname: '',
+    email: '',
+    role: 'user',
+    address: '',
+    phoneNumber: '',
+    isVerified: false
+  });
+
+  const [isEditUserDialogOpen, setIsEditUserDialogOpen] = useState(false);
 
   if (!user || !isAdmin()) {
     return (
@@ -318,6 +368,62 @@ const Admin = () => {
     }
   };
 
+  const handleEditUser = (userData) => {
+    setEditingUser({
+      _id: userData._id,
+      username: userData.username,
+      fullname: userData.fullname,
+      email: userData.email,
+      role: userData.role,
+      address: userData.address,
+      phoneNumber: userData.phoneNumber,
+      isVerified: userData.isVerified
+    });
+    setIsEditUserDialogOpen(true);
+  };
+
+  const handleUpdateUser = () => {
+    if (!editingUser.username || !editingUser.fullname || !editingUser.email) {
+      toast({
+        title: "Lỗi!",
+        description: "Vui lòng điền đầy đủ thông tin bắt buộc.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('Updating user with data:', editingUser);
+    
+    toast({
+      title: "Cập nhật người dùng thành công!",
+      description: `Thông tin người dùng "${editingUser.fullname}" đã được cập nhật.`,
+    });
+    
+    setIsEditUserDialogOpen(false);
+    setEditingUser({
+      _id: '',
+      username: '',
+      fullname: '',
+      email: '',
+      role: 'user',
+      address: '',
+      phoneNumber: '',
+      isVerified: false
+    });
+  };
+
+  const handleDeleteUser = (userId) => {
+    const userData = users.find(u => u._id === userId);
+    if (userData) {
+      console.log('Deleting user:', userId);
+      setUsers(users.filter(u => u._id !== userId));
+      toast({
+        title: "Xóa người dùng thành công!",
+        description: `Người dùng "${userData.fullname}" đã được xóa khỏi hệ thống.`,
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       <Header />
@@ -347,10 +453,11 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="habits" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="habits">Thói quen</TabsTrigger>
             <TabsTrigger value="places">Địa điểm</TabsTrigger>
             <TabsTrigger value="events">Sự kiện</TabsTrigger>
+            <TabsTrigger value="users">Người dùng</TabsTrigger>
             <TabsTrigger value="analytics">Thống kê</TabsTrigger>
           </TabsList>
 
@@ -686,6 +793,80 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="users" className="space-y-6 mt-6">
+            <Card className="glass-effect">
+              <CardHeader>
+                <CardTitle className="text-green-800 flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Quản lý người dùng
+                </CardTitle>
+                <CardDescription>
+                  Danh sách và quản lý tất cả người dùng trong hệ thống
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Tên đăng nhập</TableHead>
+                        <TableHead>Họ tên</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Vai trò</TableHead>
+                        <TableHead>SĐT</TableHead>
+                        <TableHead>Trạng thái</TableHead>
+                        <TableHead>Ngày tạo</TableHead>
+                        <TableHead>Thao tác</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {users.map((userData) => (
+                        <TableRow key={userData._id}>
+                          <TableCell className="font-medium">{userData.username}</TableCell>
+                          <TableCell>{userData.fullname}</TableCell>
+                          <TableCell>{userData.email}</TableCell>
+                          <TableCell>
+                            <Badge variant={userData.role === 'admin' ? 'default' : 'secondary'}>
+                              {userData.role === 'admin' ? 'Admin' : 'Người dùng'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{userData.phoneNumber}</TableCell>
+                          <TableCell>
+                            <Badge variant={userData.isVerified ? 'default' : 'destructive'} className={userData.isVerified ? 'bg-green-500' : ''}>
+                              {userData.isVerified ? 'Đã xác thực' : 'Chưa xác thực'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {new Date(userData.createdAt).toLocaleDateString('vi-VN')}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => handleEditUser(userData)}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="text-red-600 hover:text-red-700"
+                                onClick={() => handleDeleteUser(userData._id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="analytics" className="space-y-6 mt-6">
             <div className="grid md:grid-cols-2 gap-6">
               <Card className="glass-effect">
@@ -962,6 +1143,116 @@ const Admin = () => {
                 </Button>
                 <Button 
                   onClick={handleUpdatePlace}
+                  className="gradient-green text-white"
+                >
+                  Cập nhật
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit User Dialog */}
+        <Dialog open={isEditUserDialogOpen} onOpenChange={setIsEditUserDialogOpen}>
+          <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-green-800">Chỉnh sửa thông tin người dùng</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Tên đăng nhập *
+                  </label>
+                  <Input
+                    placeholder="Tên đăng nhập"
+                    value={editingUser.username}
+                    onChange={(e) => setEditingUser({...editingUser, username: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Họ tên *
+                  </label>
+                  <Input
+                    placeholder="Họ tên"
+                    value={editingUser.fullname}
+                    onChange={(e) => setEditingUser({...editingUser, fullname: e.target.value})}
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Email *
+                </label>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={editingUser.email}
+                  onChange={(e) => setEditingUser({...editingUser, email: e.target.value})}
+                />
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Vai trò
+                  </label>
+                  <select
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    value={editingUser.role}
+                    onChange={(e) => setEditingUser({...editingUser, role: e.target.value})}
+                  >
+                    <option value="user">Người dùng</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Số điện thoại
+                  </label>
+                  <Input
+                    placeholder="Số điện thoại"
+                    value={editingUser.phoneNumber}
+                    onChange={(e) => setEditingUser({...editingUser, phoneNumber: e.target.value})}
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Địa chỉ
+                </label>
+                <Input
+                  placeholder="Địa chỉ"
+                  value={editingUser.address}
+                  onChange={(e) => setEditingUser({...editingUser, address: e.target.value})}
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="isVerified"
+                  checked={editingUser.isVerified}
+                  onChange={(e) => setEditingUser({...editingUser, isVerified: e.target.checked})}
+                  className="rounded"
+                />
+                <label htmlFor="isVerified" className="text-sm font-medium text-gray-700">
+                  Đã xác thực tài khoản
+                </label>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsEditUserDialogOpen(false)}
+                >
+                  Hủy
+                </Button>
+                <Button 
+                  onClick={handleUpdateUser}
                   className="gradient-green text-white"
                 >
                   Cập nhật
