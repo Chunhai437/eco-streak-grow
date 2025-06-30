@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
+import RatingDialog from '@/components/RatingDialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -195,9 +195,12 @@ const Places = () => {
                         <span className="text-sm font-medium text-gray-700">
                           {place.vouchers.length} voucher có sẵn
                         </span>
-                        <Button size="sm" variant="outline" className="border-green-200 hover:bg-green-50">
-                          Xem chi tiết
-                        </Button>
+                        <RatingDialog placeName={place.name}>
+                          <Button size="sm" variant="outline" className="border-green-200 hover:bg-green-50">
+                            <Star className="w-4 h-4 mr-1" />
+                            Đánh giá
+                          </Button>
+                        </RatingDialog>
                       </div>
                     </div>
                   </CardContent>
