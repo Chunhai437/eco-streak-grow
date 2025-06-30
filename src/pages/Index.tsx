@@ -1,16 +1,18 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const Index = () => {
   const { user, isAdmin } = useAuth();
 
-  const featuredEvents = [
+  const greenLivingImages = [
     {
       id: 1,
       title: "Ngày Trái Đất 2024",
@@ -18,7 +20,7 @@ const Index = () => {
       date: "22/04/2024",
       type: "Sự kiện cộng đồng",
       description: "Tham gia hoạt động trồng cây và làm sạch môi trường",
-      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=200&fit=crop"
+      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=400&fit=crop"
     },
     {
       id: 2,
@@ -27,7 +29,7 @@ const Index = () => {
       date: "15/04/2024",
       type: "Đối tác",
       description: "Học cách tái chế đồ gia dụng thành vật dụng hữu ích",
-      image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&h=200&fit=crop"
+      image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&h=400&fit=crop"
     },
     {
       id: 3,
@@ -36,7 +38,25 @@ const Index = () => {
       date: "20/04/2024",
       type: "Quán đối tác",
       description: "Mua sắm thực phẩm hữu cơ và sản phẩm thân thiện môi trường",
-      image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400&h=200&fit=crop"
+      image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&h=400&fit=crop"
+    },
+    {
+      id: 4,
+      title: "Phân Loại Rác Thải",
+      location: "Khu dân cư",
+      date: "25/04/2024",
+      type: "Giáo dục",
+      description: "Hướng dẫn phân loại rác thải đúng cách để bảo vệ môi trường",
+      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop"
+    },
+    {
+      id: 5,
+      title: "Nông Nghiệp Xanh",
+      location: "Nông trại hữu cơ",
+      date: "30/04/2024",
+      type: "Thực hành",
+      description: "Tìm hiểu về phương pháp canh tác bền vững và hữu cơ",
+      image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800&h=400&fit=crop"
     }
   ];
 
@@ -150,46 +170,52 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Featured Events */}
+        {/* Green Living Carousel */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Sự kiện nổi bật</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Hoạt động sống xanh</h2>
             {isAdmin() && (
               <Link to="/admin">
                 <Button variant="outline" className="border-green-200 hover:bg-green-50">
-                  Quản lý sự kiện
+                  Quản lý hoạt động
                 </Button>
               </Link>
             )}
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
-            {featuredEvents.map((event) => (
-              <Card key={event.id} className="glass-effect hover:shadow-lg transition-shadow overflow-hidden">
-                <div className="h-48 bg-cover bg-center" style={{backgroundImage: `url(${event.image})`}}>
-                  <div className="h-full bg-black bg-opacity-30 flex items-end p-4">
-                    <Badge variant="secondary" className="bg-white text-gray-800">
-                      {event.type}
-                    </Badge>
-                  </div>
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-green-800">{event.title}</CardTitle>
-                  <CardDescription>
-                    <div className="flex items-center text-sm text-gray-600 mb-2">
-                      📍 {event.location} • 📅 {event.date}
+          <Carousel className="w-full max-w-5xl mx-auto">
+            <CarouselContent>
+              {greenLivingImages.map((item) => (
+                <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
+                  <Card className="glass-effect hover:shadow-lg transition-shadow overflow-hidden h-full">
+                    <div className="h-48 bg-cover bg-center relative" style={{backgroundImage: `url(${item.image})`}}>
+                      <div className="absolute inset-0 bg-black bg-opacity-30 flex items-end p-4">
+                        <Badge variant="secondary" className="bg-white/90 text-gray-800 backdrop-blur-sm">
+                          {item.type}
+                        </Badge>
+                      </div>
                     </div>
-                    {event.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <Button className="w-full gradient-green text-white">
-                    Tham gia ngay
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-green-800 text-lg">{item.title}</CardTitle>
+                      <CardDescription>
+                        <div className="flex items-center text-sm text-gray-600 mb-2">
+                          📍 {item.location} • 📅 {item.date}
+                        </div>
+                        <p className="text-sm">{item.description}</p>
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <Button className="w-full gradient-green text-white">
+                        Tham gia ngay
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
 
         {/* Quick Actions */}
