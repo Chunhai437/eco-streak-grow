@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const Index = () => {
   const { user, isAdmin } = useAuth();
@@ -49,11 +49,11 @@ const Index = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex flex-col">
         <Header />
         
         {/* Hero Section */}
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-16 flex-grow">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-8">
               Cùng nhau <span className="text-green-600">sống xanh</span>
@@ -115,15 +115,17 @@ const Index = () => {
             </Card>
           </div>
         </div>
+        
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex flex-col">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 flex-grow">
         {/* Welcome Section */}
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
@@ -225,6 +227,8 @@ const Index = () => {
           </Card>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };
