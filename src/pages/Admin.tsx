@@ -49,6 +49,17 @@ const Admin = () => {
     type: 'Sự kiện cộng đồng'
   });
 
+  const [editingEvent, setEditingEvent] = useState({
+    id: 0,
+    title: '',
+    description: '',
+    location: '',
+    date: '',
+    type: 'Sự kiện cộng đồng'
+  });
+
+  const [isEditEventDialogOpen, setIsEditEventDialogOpen] = useState(false);
+
   const [newPlace, setNewPlace] = useState({
     name: '',
     description: '',
@@ -233,6 +244,46 @@ const Admin = () => {
     });
     
     setNewEvent({ title: '', description: '', location: '', date: '', type: 'Sự kiện cộng đồng' });
+  };
+
+  const handleEditEvent = (event) => {
+    setEditingEvent({
+      id: event.id,
+      title: event.title,
+      description: '', // Will be loaded from backend in real app
+      location: '', // Will be loaded from backend in real app
+      date: event.date,
+      type: event.type
+    });
+    setIsEditEventDialogOpen(true);
+  };
+
+  const handleUpdateEvent = () => {
+    if (!editingEvent.title || !editingEvent.description) {
+      toast({
+        title: "Lỗi!",
+        description: "Vui lòng điền đầy đủ thông tin bắt buộc.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('Updating event with data:', editingEvent);
+    
+    toast({
+      title: "Cập nhật sự kiện thành công!",
+      description: `Sự kiện "${editingEvent.title}" đã được cập nhật.`,
+    });
+    
+    setIsEditEventDialogOpen(false);
+    setEditingEvent({
+      id: 0,
+      title: '',
+      description: '',
+      location: '',
+      date: '',
+      type: 'Sự kiện cộng đồng'
+    });
   };
 
   const handleCreatePlace = () => {
@@ -779,7 +830,11 @@ const Admin = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleEditEvent(event)}
+                        >
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
@@ -1253,6 +1308,92 @@ const Admin = () => {
                 </Button>
                 <Button 
                   onClick={handleUpdateUser}
+                  className="gradient-green text-white"
+                >
+                  Cập nhật
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Event Dialog */}
+        <Dialog open={isEditEventDialogOpen} onOpenChange={setIsEditEventDialogOpen}>
+          <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-green-800">Chỉnh sửa sự kiện</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Tiêu đề sự kiện *
+                  </label>
+                  <Input
+                    placeholder="Tiêu đề sự kiện"
+                    value={editingEvent.title}
+                    onChange={(e) => setEditingEvent({...editingEvent, title: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Loại sự kiện
+                  </label>
+                  <select
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    value={editingEvent.type}
+                    onChange={(e) => setEditingEvent({...editingEvent, type: e.target.value})}
+                  >
+                    <option value="Sự kiện cộng đồng">Sự kiện cộng đồng</option>
+                    <option value="Đối tác">Đối tác</option>
+                    <option value="Quán đối tác">Quán đối tác</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Địa điểm
+                  </label>
+                  <Input
+                    placeholder="Địa điểm"
+                    value={editingEvent.location}
+                    onChange={(e) => setEditingEvent({...editingEvent, location: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Ngày diễn ra
+                  </label>
+                  <Input
+                    type="date"
+                    value={editingEvent.date}
+                    onChange={(e) => setEditingEvent({...editingEvent, date: e.target.value})}
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Mô tả sự kiện *
+                </label>
+                <Textarea
+                  placeholder="Mô tả sự kiện"
+                  value={editingEvent.description}
+                  onChange={(e) => setEditingEvent({...editingEvent, description: e.target.value})}
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsEditEventDialogOpen(false)}
+                >
+                  Hủy
+                </Button>
+                <Button 
+                  onClick={handleUpdateEvent}
                   className="gradient-green text-white"
                 >
                   Cập nhật
