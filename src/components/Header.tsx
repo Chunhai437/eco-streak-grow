@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,7 +9,7 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
-import { Home, Users, MapPin, Settings, LogOut, Menu, X } from 'lucide-react';
+import { Home, Users, MapPin, Settings, LogOut, Menu, X, Newspaper } from 'lucide-react';
 
 const Header = () => {
   const { user, logout, isAdmin } = useAuth();
@@ -22,6 +21,7 @@ const Header = () => {
     { name: 'Thói quen', path: '/habits', icon: Users },
     { name: 'Cộng đồng', path: '/community', icon: Users },
     { name: 'Địa điểm xanh', path: '/places', icon: MapPin },
+    { name: 'Tin tức', path: '/news', icon: Newspaper },
     ...(isAdmin() ? [{ name: 'Quản lý', path: '/admin', icon: Settings }] : [])
   ];
 
