@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
+import CommentSection from '@/components/CommentSection';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,6 +16,7 @@ const Community = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [newPost, setNewPost] = useState('');
+  const [activeComments, setActiveComments] = useState<number | null>(null);
   
   const [posts] = useState([
     {
@@ -89,6 +91,10 @@ const Community = () => {
       title: "Đã thích bài viết! ❤️",
       description: "Cảm ơn bạn đã ủng hộ cộng đồng.",
     });
+  };
+
+  const handleToggleComments = (postId: number) => {
+    setActiveComments(activeComments === postId ? null : postId);
   };
 
   if (!user) {
@@ -251,7 +257,10 @@ const Community = () => {
                         <Button 
                           variant="ghost" 
                           size="sm"
-                          className="flex items-center space-x-2 text-gray-600 hover:text-blue-500"
+                          onClick={() => handleToggleComments(post.id)}
+                          className={`flex items-center space-x-2 text-gray-600 hover:text-blue-500 ${
+                            activeComments === post.id ? 'text-blue-500' : ''
+                          }`}
                         >
                           <MessageCircle className="w-4 h-4" />
                           <span>{post.comments}</span>
@@ -267,6 +276,13 @@ const Community = () => {
                         </Button>
                       </div>
                     </div>
+
+                    {/* Comment Section */}
+                    <CommentSection
+                      postId={post.id}
+                      isVisible={activeComments === post.id}
+                      onClose={() => setActiveComments(null)}
+                    />
                   </CardContent>
                 </Card>
               ))}
