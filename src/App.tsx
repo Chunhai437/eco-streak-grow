@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import GoogleCallback from "./pages/GoogleCallback";
 import News from "./pages/News";
+import NewsDetail from "./pages/NewsDetail";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/places" element={<Places />} />
             <Route path="/news" element={<News />} />
             <Route path="/news" element={<News />} />
+             <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/google/callback" element={<GoogleCallback />} />
