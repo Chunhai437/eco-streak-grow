@@ -129,8 +129,12 @@ export const UserChallenge = () => {
 
   if (challenges.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen text-gray-600">
-        <h1 className="text-3xl font-bold">Chưa có thử thách nào được tạo</h1>
+      <div className="flex flex-col items-center h-screen text-gray-600 ">
+        <h1 className="text-3xl font-bold text-center mt-4">
+          Chưa có thử thách nào được tạo
+          <br />
+          <span>Hãy đến phần thói quen gốc để tạo thử thách!</span>
+        </h1>
       </div>
     );
   }

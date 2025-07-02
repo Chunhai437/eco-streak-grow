@@ -77,6 +77,7 @@ const Profile = () => {
         description: "Thông tin cá nhân đã được cập nhật.",
       });
       setIsEditing(false);
+      fetchProfileData();
     } catch (error) {
       toast({
         title: "Lỗi cập nhật thông tin cá nhân",

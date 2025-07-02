@@ -140,13 +140,9 @@ export const AdminCommunity = () => {
                       Đang hoạt động
                     </Badge>
                   </div>
-                  <p className="text-gray-600 text-sm mb-2">
+                  <p className="text-gray-600 text-sm mb-2 word-break">
                     {community.description}
                   </p>
-                  <div className="text-sm text-gray-600">
-                    {community.users?.length || 0} người tham gia •{" "}
-                    {community.posts?.length || 0} bài đăng
-                  </div>
                 </div>
                 {/* <div className="flex items-center gap-2">
                   <Button size="sm" variant="outline">

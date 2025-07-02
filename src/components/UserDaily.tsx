@@ -4,7 +4,7 @@ import { getDailyLog } from "@/services/DailyLog";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { format, isToday, isYesterday, subDays } from "date-fns";
-import { vi } from "date-fns/locale";
+import { da, vi } from "date-fns/locale";
 
 interface DailyLog {
   _id: string;
@@ -84,6 +84,11 @@ export const UserDaily = () => {
           <CardTitle className="text-green-800">Lịch sử hoạt động</CardTitle>
         </CardHeader>
         <CardContent>
+          {dailyLogs.length === 0 ? (
+            <p className="text-black-600 text-center mt-5 text-2xl">
+              Bạn chưa có hoạt động nào.
+            </p>
+          ) : null}
           <div className="space-y-4">
             {dailyLogs.slice(0, 5).map((log) => (
               <div

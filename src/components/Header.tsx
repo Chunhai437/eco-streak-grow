@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -89,11 +88,7 @@ const Header = () => {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-64"
-                  align="end"
-                  forceMount
-                >
+                <DropdownMenuContent className="w-64" align="end" forceMount>
                   <div className="flex items-center justify-start gap-3 p-4">
                     <div className="flex flex-col space-y-1 leading-none">
                       <p className="font-medium">{user.fullname}</p>
@@ -110,7 +105,6 @@ const Header = () => {
                       </DropdownMenuItem>
                     </Link>
                   )}
-
                   <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Đăng xuất</span>

@@ -146,7 +146,7 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="habits" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="habits">Thói quen</TabsTrigger>
             <TabsTrigger value="places">Địa điểm</TabsTrigger>
             <TabsTrigger value="communities">Cộng đồng</TabsTrigger>

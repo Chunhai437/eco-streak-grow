@@ -98,8 +98,11 @@ export const UserHabit = () => {
 
   if (habits.length === 0) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-600">Chưa có thói quen gốc nào được tạo.</p>
+      <div className="flex flex-col items-center h-screen text-gray-600 ">
+        <h1 className="text-3xl font-bold text-center mt-4">
+          Chưa có thói quen gốc để tạo thử thách.
+          
+        </h1>
       </div>
     );
   }

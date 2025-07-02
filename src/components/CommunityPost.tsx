@@ -108,7 +108,7 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
     try {
       setIsLoading(true);
 
-      await createPost( "", newPost, imageUrl, communityId);
+      await createPost("", newPost, imageUrl, communityId);
       toast({
         title: "Đăng bài thành công!",
         description: "Bài viết của bạn đã được chia sẻ với cộng đồng.",
@@ -169,7 +169,6 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
         )
       );
     } catch (error) {
-     
       toast({
         title: "Đã thích 😍",
         description: "Bạn đã bấm thích bài viết này rồi !",
@@ -219,7 +218,7 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
 
       <div className="space-y-6">
         {posts.length === 0 ? (
-          <div className="flex items-center justify-center h-96">
+          <div className="flex items-start justify-center h-96">
             <h1 className="text-gray-600 text-center">
               Chưa có bài viết nào trong cộng đồng này.
             </h1>
@@ -245,7 +244,9 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
                           <span className="font-semibold">
                             {userPost?.fullname ?? "Anonymous User"}
                           </span>
-                          <Badge variant="secondary">Bảo vệ môi trường</Badge>
+                          <Badge variant="secondary">
+                            {post.communityId.name || "Bảo vệ môi trường"}
+                          </Badge>
                         </div>
                         <span className="text-sm text-gray-500">
                           {dayjs(post.createdAt).fromNow()}

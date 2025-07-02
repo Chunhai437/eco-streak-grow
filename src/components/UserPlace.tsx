@@ -49,8 +49,10 @@ export const UserPlace = ({ searchTerm }: UserPlaceProps) => {
 
   if (filteredPlaces.length === 0) {
     return (
-      <div className="text-center mt-8">
-        <p className="text-gray-500">Chưa có địa điểm đối tác nào</p>
+      <div className="flex flex-col items-center h-screen text-gray-600 ">
+        <h1 className="text-3xl font-bold text-center mt-4">
+          Chưa có địa điểm nào phù hợp
+        </h1>
       </div>
     );
   }
@@ -133,7 +135,11 @@ export const UserPlace = ({ searchTerm }: UserPlaceProps) => {
                 <div className="pt-4 border-t border-gray-100">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-700">
-                      {place.partnerVouchers.length} {place.partnerVouchers.length === 1 ? "voucher" : "vouchers"} có sẵn
+                      {place.partnerVouchers.length}{" "}
+                      {place.partnerVouchers.length === 1
+                        ? "voucher"
+                        : "vouchers"}{" "}
+                      có sẵn
                     </span>
                     <RatingDialog
                       placeName={place.name}
