@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -26,15 +27,15 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-white/80 backdrop-blur-md border-b border-green-100 sticky top-0 z-50">
+    <header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-green rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">GL</span>
             </div>
-            <span className="font-bold text-xl text-green-600">Green Living</span>
+            <span className="font-bold text-xl text-white">Green Living</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -45,8 +46,8 @@ const Header = () => {
                 to={item.path}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-colors ${
                   location.pathname === item.path
-                    ? 'bg-green-100 text-green-700'
-                    : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 <item.icon size={18} />
@@ -63,7 +64,7 @@ const Header = () => {
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback className="bg-green-100 text-green-600">
+                      <AvatarFallback className="bg-white/20 text-white">
                         {user.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -92,7 +93,7 @@ const Header = () => {
               </DropdownMenu>
             ) : (
               <Link to="/auth">
-                <Button className="gradient-green text-white">
+                <Button className="bg-white text-cyan-600 hover:bg-white/90">
                   Đăng nhập
                 </Button>
               </Link>
@@ -102,7 +103,7 @@ const Header = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="md:hidden text-white"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -112,7 +113,7 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-green-100">
+          <div className="md:hidden py-4 border-t border-white/20">
             <nav className="flex flex-col space-y-2">
               {navItems.map((item) => (
                 <Link
@@ -120,8 +121,8 @@ const Header = () => {
                   to={item.path}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
                     location.pathname === item.path
-                      ? 'bg-green-100 text-green-700'
-                      : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                      ? 'bg-white/20 text-white'
+                      : 'text-white/80 hover:text-white hover:bg-white/10'
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

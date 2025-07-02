@@ -69,28 +69,28 @@ const Index = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex flex-col">
+      <div className="min-h-screen gradient-blue-green flex flex-col">
         <Header />
         
         {/* Hero Section */}
         <div className="container mx-auto px-4 py-16 flex-grow">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-8">
-              Cùng nhau <span className="text-green-600">sống xanh</span>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-8">
+              Cùng nhau <span className="text-cyan-200">sống xanh</span>
               <br />
-              <span className="text-blue-600">bảo vệ hành tinh</span>
+              <span className="text-lime-200">bảo vệ hành tinh</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+            <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto">
               Tham gia cộng đồng Green Living để theo dõi thói quen sống xanh, 
               tham gia thử thách môi trường và kết nối với những người cùng chí hướng.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/auth">
-                <Button size="lg" className="gradient-green text-white px-8 py-3 text-lg">
+                <Button size="lg" className="bg-white text-cyan-600 hover:bg-white/90 px-8 py-3 text-lg">
                   Bắt đầu ngay
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="px-8 py-3 text-lg border-green-200 hover:bg-green-50">
+              <Button size="lg" variant="outline" className="px-8 py-3 text-lg border-white/30 text-white hover:bg-white/10">
                 Tìm hiểu thêm
               </Button>
             </div>
@@ -103,7 +103,7 @@ const Index = () => {
                 <div className="w-12 h-12 gradient-green rounded-lg flex items-center justify-center mb-4">
                   <span className="text-white text-2xl">🌱</span>
                 </div>
-                <CardTitle className="text-green-800">Theo dõi thói quen</CardTitle>
+                <CardTitle className="text-cyan-800">Theo dõi thói quen</CardTitle>
                 <CardDescription>
                   Xây dựng và duy trì các thói quen sống xanh hàng ngày
                 </CardDescription>
@@ -115,7 +115,7 @@ const Index = () => {
                 <div className="w-12 h-12 gradient-green rounded-lg flex items-center justify-center mb-4">
                   <span className="text-white text-2xl">🏆</span>
                 </div>
-                <CardTitle className="text-green-800">Thử thách xanh</CardTitle>
+                <CardTitle className="text-cyan-800">Thử thách xanh</CardTitle>
                 <CardDescription>
                   Tham gia các thử thách môi trường và nhận phần thưởng
                 </CardDescription>
@@ -127,7 +127,7 @@ const Index = () => {
                 <div className="w-12 h-12 gradient-green rounded-lg flex items-center justify-center mb-4">
                   <span className="text-white text-2xl">🤝</span>
                 </div>
-                <CardTitle className="text-green-800">Cộng đồng</CardTitle>
+                <CardTitle className="text-cyan-800">Cộng đồng</CardTitle>
                 <CardDescription>
                   Chia sẻ kinh nghiệm và học hỏi từ cộng đồng sống xanh
                 </CardDescription>
@@ -142,16 +142,16 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex flex-col">
+    <div className="min-h-screen gradient-blue-green flex flex-col">
       <Header />
       
       <div className="container mx-auto px-4 py-8 flex-grow">
         {/* Welcome Section */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+          <h1 className="text-4xl font-bold text-white mb-4">
             Chào mừng trở lại, {user.name}! 🌿
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-white/90 text-lg">
             Hãy tiếp tục hành trình sống xanh của bạn hôm nay
           </p>
         </div>
@@ -173,10 +173,10 @@ const Index = () => {
         {/* Green Living Carousel */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Hoạt động sống xanh</h2>
+            <h2 className="text-2xl font-bold text-white">Hoạt động sống xanh</h2>
             {isAdmin() && (
               <Link to="/admin">
-                <Button variant="outline" className="border-green-200 hover:bg-green-50">
+                <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
                   Quản lý hoạt động
                 </Button>
               </Link>
@@ -222,7 +222,7 @@ const Index = () => {
         <div className="grid md:grid-cols-2 gap-6">
           <Card className="glass-effect">
             <CardHeader>
-              <CardTitle className="text-green-800">Thói quen hôm nay</CardTitle>
+              <CardTitle className="text-cyan-800">Thói quen hôm nay</CardTitle>
               <CardDescription>
                 Hoàn thành các thói quen xanh của bạn
               </CardDescription>
@@ -238,7 +238,7 @@ const Index = () => {
 
           <Card className="glass-effect">
             <CardHeader>
-              <CardTitle className="text-green-800">Khám phá địa điểm</CardTitle>
+              <CardTitle className="text-cyan-800">Khám phá địa điểm</CardTitle>
               <CardDescription>
                 Tìm các địa điểm thân thiện với môi trường
               </CardDescription>

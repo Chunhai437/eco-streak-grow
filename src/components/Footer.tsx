@@ -4,34 +4,34 @@ import { Facebook, Instagram } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-green-50 border-t border-green-100 py-8 mt-auto">
+    <footer className="bg-white/10 backdrop-blur-md border-t border-white/20 py-8 mt-auto">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           {/* Logo and Company Info */}
           <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <div className="w-8 h-8 gradient-green rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">GL</span>
             </div>
-            <span className="font-bold text-xl text-green-800">Green Living</span>
+            <span className="font-bold text-xl text-white">Green Living</span>
           </div>
 
           {/* Contact Info */}
           <div className="flex flex-col items-center md:items-end mb-4 md:mb-0">
-            <p className="text-green-700 mb-2">Liên hệ với chúng tôi</p>
+            <p className="text-white/80 mb-2">Liên hệ với chúng tôi</p>
             <div className="flex items-center space-x-2">
               <span className="text-2xl">📞</span>
-              <span className="text-green-800 font-medium">0123 456 789</span>
+              <span className="text-white font-medium">0123 456 789</span>
             </div>
           </div>
 
           {/* Social Media Links */}
           <div className="flex items-center space-x-4">
-            <p className="text-green-700 mr-2">Theo dõi chúng tôi:</p>
+            <p className="text-white/80 mr-2">Theo dõi chúng tôi:</p>
             <a
               href="https://facebook.com/greenliving"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-green-800 hover:text-blue-600 transition-colors"
+              className="text-white hover:text-blue-300 transition-colors"
             >
               <Facebook size={24} />
             </a>
@@ -39,7 +39,7 @@ const Footer = () => {
               href="https://instagram.com/greenliving"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-green-800 hover:text-pink-600 transition-colors"
+              className="text-white hover:text-pink-300 transition-colors"
             >
               <Instagram size={24} />
             </a>
@@ -47,7 +47,7 @@ const Footer = () => {
               href="https://tiktok.com/@greenliving"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-green-800 hover:text-gray-600 transition-colors"
+              className="text-white hover:text-gray-300 transition-colors"
             >
               <svg
                 width="24"
@@ -63,8 +63,8 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-green-200 mt-6 pt-4 text-center">
-          <p className="text-green-600 text-sm">
+        <div className="border-t border-white/20 mt-6 pt-4 text-center">
+          <p className="text-white/70 text-sm">
             © 2024 Green Living. Tất cả quyền được bảo lưu.
           </p>
         </div>
