@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,14 +41,11 @@ const Header = () => {
   ];
 
   return (
-    <header className="glass-effect border-b border-white/20 sticky top-0 z-50">
+    <header className="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            {/* <div className="w-8 h-8 gradient-green rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">GL</span>
-            </div> */}
             <img
               src={logo}
               alt="logo"
@@ -92,7 +90,7 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                  className="w-64 glass-card border-white/30"
+                  className="w-64"
                   align="end"
                   forceMount
                 >
@@ -129,7 +127,7 @@ const Header = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden text-white hover:bg-white/15 rounded-xl"
+              className="md:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -139,7 +137,7 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-6 border-t border-white/20">
+          <div className="md:hidden py-6 border-t border-gray-200">
             <nav className="flex flex-col space-y-2">
               {navItems.map((item) => (
                 <Link

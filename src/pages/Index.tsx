@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -66,16 +67,16 @@ const Index = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-green-50 to-blue-50">
         <Header />
 
         {/* Hero Section */}
         <div className="container mx-auto px-6 py-20 flex-grow">
           <div className="text-center max-w-5xl mx-auto">
-            <h1 className="text-6xl md:text-7xl font-bold text-white mb-8 leading-tight">
-              Cùng nhau <span className="text-cyan-200">sống xanh</span>
+            <h1 className="text-6xl md:text-7xl font-bold text-gray-800 mb-8 leading-tight">
+              Cùng nhau <span className="text-green-600">sống xanh</span>
               <br />
-              <span className="text-emerald-200">bảo vệ hành tinh</span>
+              <span className="text-emerald-600">bảo vệ hành tinh</span>
             </h1>
             <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
               Tham gia cộng đồng Green Living để theo dõi thói quen sống xanh,
@@ -103,9 +104,9 @@ const Index = () => {
 
           {/* Features */}
           <div className="grid md:grid-cols-3 gap-8 mt-32">
-            <Card className="glass-card hover-lift border-white/30">
+            <Card className="glass-card hover-lift">
               <CardHeader className="text-center pb-4">
-                <div className="w-16 h-16 gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <div className="w-16 h-16 gradient-green rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                   <span className="text-white text-3xl">🌱</span>
                 </div>
                 <CardTitle className="text-green-800">
@@ -117,12 +118,12 @@ const Index = () => {
               </CardHeader>
             </Card>
 
-            <Card className="glass-card hover-lift border-white/30">
+            <Card className="glass-card hover-lift">
               <CardHeader className="text-center pb-4">
-                <div className="w-16 h-16 gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <div className="w-16 h-16 gradient-green rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                   <span className="text-white text-3xl">🏆</span>
                 </div>
-                <CardTitle className="text-sky-700 text-xl">
+                <CardTitle className="text-green-800 text-xl">
                   Thử thách xanh
                 </CardTitle>
                 <CardDescription className="text-gray-600">
@@ -132,12 +133,12 @@ const Index = () => {
               </CardHeader>
             </Card>
 
-            <Card className="glass-card hover-lift border-white/30">
+            <Card className="glass-card hover-lift">
               <CardHeader className="text-center pb-4">
-                <div className="w-16 h-16 gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <div className="w-16 h-16 gradient-green rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                   <span className="text-white text-3xl">🤝</span>
                 </div>
-                <CardTitle className="text-sky-700 text-xl">
+                <CardTitle className="text-green-800 text-xl">
                   Cộng đồng
                 </CardTitle>
                 <CardDescription className="text-gray-600">
@@ -152,7 +153,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-green-50 to-blue-50">
       <Header />
 
       <div className="container mx-auto px-4 py-8">
@@ -179,7 +180,7 @@ const Index = () => {
           {stats.map((stat) => (
             <Card
               key={stat.label}
-              className="glass-card hover-lift border-white/30"
+              className="glass-card hover-lift"
             >
               <CardContent className="p-8 text-center">
                 <div className={`text-4xl font-bold ${stat.color} mb-3`}>
