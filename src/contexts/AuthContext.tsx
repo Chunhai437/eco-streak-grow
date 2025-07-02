@@ -1,12 +1,14 @@
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 interface User {
   id: string;
   email: string;
-  name: string;
-  role: 'user' | 'admin';
-  avatar?: string;
+  fullname: string;
+  address: string;
+  username: string;
+  role: "user" | "admin";
 }
 
 interface AuthContextType {
@@ -14,7 +16,14 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  register: (
+    username: string,
+    fullname: string,
+    email: string,
+    password: string,
+    address: string,
+    phoneNumber: string
+  ) => Promise<void>;
   logout: () => void;
   isAdmin: () => boolean;
 }
@@ -22,84 +31,138 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
+  const navigate = useNavigate();
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const baseUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    // Simulate checking auth status
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    const savedUser = localStorage.getItem("user");
+    try {
+      if (savedUser && savedUser !== "undefined") {
+        setUser(JSON.parse(savedUser));
+      }
+    } catch (err) {
+      console.error("Invalid user data in localStorage", err);
+      localStorage.removeItem("user");
     }
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (identifier: string, password: string) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const mockUser: User = {
-      id: '1',
-      email,
-      name: email.split('@')[0],
-      role: email.includes('admin') ? 'admin' : 'user'
-    };
-    
-    setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    setIsLoading(false);
+
+    try {
+      const response = await fetch(`${baseUrl}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ identifier, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Lỗi không xác định từ API");
+      }
+
+      interface TokenPayload {
+        id: string;
+        email: string;
+        fullname?: string;
+        address?: string;
+        username?: string;
+        role: "user" | "admin";
+        iat: number;
+        exp: number;
+      }
+
+      const { token } = await response.json();
+
+      // ✅ Decode token
+      const decoded = jwtDecode<TokenPayload>(token);
+
+      // ✅ Gán vào user từ token
+      const userInfo: User = {
+        id: decoded.id,
+        email: decoded.email,
+        fullname: decoded.fullname,
+        username: decoded.username,
+        address: decoded.address,
+        role: decoded.role,
+      };
+
+      setUser(userInfo);
+      localStorage.setItem("user", JSON.stringify(userInfo));
+      localStorage.setItem("accessToken", token);
+    } catch (error) {
+      console.error(error.message);
+      throw new Error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const loginWithGoogle = async () => {
-    setIsLoading(true);
-    // Simulate Google OAuth
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const mockUser: User = {
-      id: '2',
-      email: 'user@google.com',
-      name: 'Google User',
-      role: 'user',
-      avatar: 'https://via.placeholder.com/40'
-    };
-    
-    setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    setIsLoading(false);
+    window.location.href = `${baseUrl}/api/auth/google`;
   };
 
-  const register = async (email: string, password: string, name: string) => {
+  const register = async (
+    username: string,
+    fullname: string,
+    email: string,
+    password: string,
+    address: string,
+    phoneNumber: string
+  ) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const mockUser: User = {
-      id: '3',
-      email,
-      name,
-      role: 'user'
-    };
-    
-    setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    setIsLoading(false);
+
+    try {
+      const response = await fetch(`${baseUrl}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({
+          username,
+          fullname,
+          email,
+          password,
+          address,
+          phoneNumber,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Lỗi không xác định từ API");
+      }
+    } catch (error) {
+      console.error(error.message);
+      throw new Error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
+    window.location.href = "/";
   };
 
-  const isAdmin = () => user?.role === 'admin';
+  const isAdmin = () => user?.role === "admin";
 
   const value = {
     user,
@@ -108,7 +171,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loginWithGoogle,
     register,
     logout,
-    isAdmin
+    isAdmin,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
