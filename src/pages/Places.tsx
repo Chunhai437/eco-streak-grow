@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
@@ -91,25 +92,27 @@ const Places = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-blue-green">
         <Header />
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            Vui lòng đăng nhập để khám phá địa điểm xanh
-          </h1>
+          <div className="glass-effect max-w-md mx-auto p-8 rounded-xl">
+            <h1 className="text-3xl font-bold text-white mb-4">
+              Vui lòng đăng nhập để khám phá địa điểm xanh
+            </h1>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-blue-green">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Địa điểm xanh</h1>
-          <p className="text-gray-600">Khám phá và ủng hộ các doanh nghiệp thân thiện môi trường</p>
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold text-white mb-2">Địa điểm xanh</h1>
+          <p className="text-white/80 text-lg">Khám phá và ủng hộ các doanh nghiệp thân thiện môi trường</p>
         </div>
 
         {/* Search and Stats */}
@@ -120,31 +123,36 @@ const Places = () => {
               placeholder="Tìm kiếm địa điểm, loại hình, hoặc thẻ..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 glass-effect border-white/20 text-white placeholder:text-white/60"
             />
           </div>
           
-          <Card className="glass-effect px-6 py-3">
+          <div className="glass-effect px-6 py-3 rounded-lg">
             <div className="flex items-center gap-2">
-              <Gift className="w-5 h-5 text-green-600" />
-              <span className="font-semibold text-green-800">Điểm của bạn: {userPoints}</span>
+              <Gift className="w-5 h-5 text-white" />
+              <span className="font-semibold text-white">Điểm của bạn: {userPoints}</span>
             </div>
-          </Card>
+          </div>
         </div>
 
         <Tabs defaultValue="explore" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="explore">Khám phá</TabsTrigger>
-            <TabsTrigger value="vouchers">Voucher</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 glass-effect border-white/20">
+            <TabsTrigger value="explore" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white">
+              Khám phá
+            </TabsTrigger>
+            <TabsTrigger value="vouchers" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white">
+              Voucher
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="explore" className="space-y-6 mt-6">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPlaces.map((place) => (
-                <Card key={place.id} className="glass-effect hover:shadow-lg transition-shadow overflow-hidden">
-                  <div className="h-48 bg-cover bg-center" style={{backgroundImage: `url(${place.image})`}}>
-                    <div className="h-full bg-black bg-opacity-30 flex items-end p-4">
-                      <Badge variant="secondary" className="bg-white text-gray-800">
+                <Card key={place.id} className="glass-effect border-white/20 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+                  <div className="h-48 bg-cover bg-center relative" style={{backgroundImage: `url(${place.image})`}}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-4 left-4">
+                      <Badge variant="secondary" className="bg-white/90 text-gray-800 backdrop-blur-sm">
                         {place.type}
                       </Badge>
                     </div>
@@ -153,50 +161,50 @@ const Places = () => {
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <CardTitle className="text-green-800">{place.name}</CardTitle>
-                        <div className="flex items-center gap-1 mt-1">
-                          <MapPin className="w-4 h-4 text-gray-400" />
-                          <span className="text-sm text-gray-600">{place.address}</span>
+                        <CardTitle className="text-white text-xl">{place.name}</CardTitle>
+                        <div className="flex items-center gap-1 mt-2">
+                          <MapPin className="w-4 h-4 text-white/60" />
+                          <span className="text-sm text-white/70">{place.address}</span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1 text-yellow-500">
+                      <div className="flex items-center gap-1 text-yellow-400">
                         <Star className="w-4 h-4 fill-current" />
                         <span className="text-sm font-semibold">{place.rating}</span>
-                        <span className="text-xs text-gray-600">({place.reviews})</span>
+                        <span className="text-xs text-white/60">({place.reviews})</span>
                       </div>
                     </div>
                   </CardHeader>
 
                   <CardContent className="space-y-4">
-                    <p className="text-gray-700 text-sm">{place.description}</p>
+                    <p className="text-white/80 text-sm">{place.description}</p>
                     
                     <div className="flex flex-wrap gap-2">
                       {place.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-green-600">
+                        <Badge key={tag} variant="outline" className="border-white/30 text-white/90 bg-white/10">
                           {tag}
                         </Badge>
                       ))}
                     </div>
 
                     <div className="space-y-2">
-                      <h4 className="font-semibold text-green-800 text-sm">Đặc điểm xanh:</h4>
-                      <ul className="text-sm text-gray-600 space-y-1">
+                      <h4 className="font-semibold text-white text-sm">Đặc điểm xanh:</h4>
+                      <ul className="text-sm text-white/70 space-y-1">
                         {place.greenFeatures.map((feature, index) => (
                           <li key={index} className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                            <span className="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
                             {feature}
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    <div className="pt-4 border-t border-gray-100">
+                    <div className="pt-4 border-t border-white/20">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-white/80">
                           {place.vouchers.length} voucher có sẵn
                         </span>
                         <RatingDialog placeName={place.name}>
-                          <Button size="sm" variant="outline" className="border-green-200 hover:bg-green-50">
+                          <Button size="sm" variant="outline" className="border-white/30 text-white hover:bg-white/10">
                             <Star className="w-4 h-4 mr-1" />
                             Đánh giá
                           </Button>
@@ -212,32 +220,32 @@ const Places = () => {
           <TabsContent value="vouchers" className="space-y-6 mt-6">
             <div className="grid gap-6">
               {places.map((place) => (
-                <Card key={place.id} className="glass-effect">
+                <Card key={place.id} className="glass-effect border-white/20">
                   <CardHeader>
-                    <CardTitle className="text-green-800 flex items-center gap-2">
+                    <CardTitle className="text-white flex items-center gap-2">
                       <Gift className="w-5 h-5" />
                       {place.name}
                     </CardTitle>
-                    <CardDescription>{place.type} • {place.address}</CardDescription>
+                    <CardDescription className="text-white/70">{place.type} • {place.address}</CardDescription>
                   </CardHeader>
                   
                   <CardContent>
                     <div className="grid md:grid-cols-2 gap-4">
                       {place.vouchers.map((voucher) => (
-                        <div key={voucher.id} className="p-4 border border-green-200 rounded-lg bg-green-50">
+                        <div key={voucher.id} className="p-4 border border-white/20 rounded-lg bg-white/10 backdrop-blur-sm">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex-1">
-                              <h4 className="font-semibold text-green-800">{voucher.title}</h4>
+                              <h4 className="font-semibold text-white">{voucher.title}</h4>
                               <div className="flex items-center gap-2 mt-1">
-                                <Gift className="w-4 h-4 text-green-600" />
-                                <span className="text-sm text-green-700">{voucher.points} điểm</span>
+                                <Gift className="w-4 h-4 text-white/80" />
+                                <span className="text-sm text-white/80">{voucher.points} điểm</span>
                               </div>
                             </div>
                           </div>
                           
                           <Button
                             onClick={() => handleRedeemVoucher(voucher, place.name)}
-                            className="w-full gradient-green text-white"
+                            className="w-full bg-white/20 text-white hover:bg-white/30 border-0"
                             disabled={userPoints < voucher.points}
                           >
                             {userPoints >= voucher.points ? 'Đổi voucher' : 'Không đủ điểm'}
