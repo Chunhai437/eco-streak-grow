@@ -24,6 +24,7 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { getUserByID, User } from "@/services/UserApi";
+import { Spinner } from "./Spinner/Spinner";
 
 dayjs.extend(relativeTime);
 
@@ -40,6 +41,7 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [activeComments, setActiveComments] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingPage, setLoadingPage] = useState<boolean>(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [userMap, setUserMap] = useState<Record<string, User>>({});
 
@@ -52,6 +54,7 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
 
   const fetchAllPosts = async () => {
     try {
+      setLoadingPage(true);
       const data = await getAllPosts();
       setPosts(data);
       await fetchUserMap(data);
@@ -63,11 +66,14 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
         description: message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
   const fetchPostsOfCommunity = async () => {
     try {
+      setLoadingPage(true);
       const data = await getPostsOfCommunity(communityId);
       setPosts(data);
       await fetchUserMap(data);
@@ -79,6 +85,8 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
         description: message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -176,6 +184,10 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
       });
     }
   };
+
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
 
   return (
     <div className="lg:col-span-3 space-y-6">

@@ -13,6 +13,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { User, Mail, Lock, MapPin, Edit, Save, X, Phone } from "lucide-react";
 import { getUserByID, updateUser } from "@/services/UserApi";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 const Profile = () => {
   const storedUser = localStorage.getItem("user");
@@ -20,6 +21,7 @@ const Profile = () => {
 
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
   const [profileData, setProfileData] = useState({
     username: "",
     fullname: "",
@@ -36,6 +38,7 @@ const Profile = () => {
 
   const fetchProfileData = async () => {
     try {
+      setLoadingPage(true);
       const data = await getUserByID(user?.id || "");
       setProfileData({
         username: data?.username || "",
@@ -52,6 +55,8 @@ const Profile = () => {
       });
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -91,6 +96,10 @@ const Profile = () => {
     fetchProfileData();
     setIsEditing(false);
   };
+
+  if (loadingPage) {
+    return <Spinner />;
+  }
 
   if (!user) {
     return (

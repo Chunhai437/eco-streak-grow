@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -26,16 +25,19 @@ import {
 import post_1 from "@/assets/post 1.png";
 import post_2 from "@/assets/post 2.png";
 import post_3 from "@/assets/post 3.png";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 const Index = () => {
   const { user, isAdmin } = useAuth();
   const [habitCount, setHabitCount] = useState(0);
   const [placeCount, setPlaceCount] = useState(0);
   const [communityCount, setCommunityCount] = useState(0);
+  const [loadingPage, setLoadingPage] = useState(false);
 
   useEffect(() => {
     const fetchAll = async () => {
       try {
+        setLoadingPage(true);
         const [habits, places, communities] = await Promise.all([
           getAllHabit(),
           getAllPlaces(),
@@ -46,6 +48,8 @@ const Index = () => {
         setCommunityCount(communities.length);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu thống kê:", error);
+      } finally {
+        setLoadingPage(false);
       }
     };
 
@@ -64,6 +68,10 @@ const Index = () => {
     },
     { label: "CO2 tiết kiệm (kg)", value: "2,847", color: "text-orange-600" },
   ];
+
+  if (loadingPage) {
+    return <Spinner />;
+  }
 
   if (!user) {
     return (
@@ -178,10 +186,7 @@ const Index = () => {
         {/* Stats */}
         <div className="grid md:grid-cols-4 gap-6 mb-16">
           {stats.map((stat) => (
-            <Card
-              key={stat.label}
-              className="glass-card hover-lift"
-            >
+            <Card key={stat.label} className="glass-card hover-lift">
               <CardContent className="p-8 text-center">
                 <div className={`text-4xl font-bold ${stat.color} mb-3`}>
                   {stat.value}

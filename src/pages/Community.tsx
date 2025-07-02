@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
@@ -9,12 +8,13 @@ import Footer from "@/components/Footer";
 
 import { CommunityPost } from "@/components/CommunityPost";
 import { getAllCommunities } from "@/services/CommunityApi";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 const Community = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [selectedId, setSelectedId] = useState("");
-
+  const [loadingPage, setLoadingPage] = useState(false);
   const [communities, setCommunities] = useState([]);
   useEffect(() => {
     if (user) {
@@ -23,6 +23,7 @@ const Community = () => {
   }, [user]);
   const fetchCommunities = async () => {
     try {
+      setLoadingPage(true);
       const data = await getAllCommunities();
       setCommunities(data);
     } catch (error) {
@@ -31,8 +32,14 @@ const Community = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
+
+  // if (loadingPage) {
+  //   return <Spinner />;
+  // }
 
   if (!user) {
     return (

@@ -11,6 +11,7 @@ import {
 import { Gift } from "lucide-react";
 import { Button } from "./ui/button";
 import { getAllPlaces } from "@/services/PlaceApi";
+import { Spinner } from "./Spinner/Spinner";
 
 interface VoucherProps {
   userPoints: number;
@@ -21,6 +22,7 @@ export const UserVoucher = ({ userPoints, setUserPoints }: VoucherProps) => {
   const { toast } = useToast();
   const [places, setPlaces] = useState([]);
   const [redeemedVouchers, setRedeemedVouchers] = useState<string[]>([]);
+  const [loadingPage, setLoadingPage] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -30,6 +32,7 @@ export const UserVoucher = ({ userPoints, setUserPoints }: VoucherProps) => {
 
   const fetchPlaces = async () => {
     try {
+      setLoadingPage(true);
       const data = await getAllPlaces();
       setPlaces(data);
     } catch (error) {
@@ -38,6 +41,8 @@ export const UserVoucher = ({ userPoints, setUserPoints }: VoucherProps) => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -69,6 +74,10 @@ export const UserVoucher = ({ userPoints, setUserPoints }: VoucherProps) => {
       });
     }
   };
+
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
 
   if (places.length === 0) {
     return (

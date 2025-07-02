@@ -14,12 +14,14 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { checkInChallenge, getUserChallenge } from "@/services/Challenge";
 import { isSameDay } from "date-fns";
+import { Spinner } from "./Spinner/Spinner";
 
 export const UserChallenge = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
   const [challenges, setChallenges] = useState([]);
+  const [loadingPage, setLoadingPage] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -28,6 +30,7 @@ export const UserChallenge = () => {
 
   const fetchChallenges = async () => {
     try {
+      setLoadingPage(true);
       const data = await getUserChallenge(user?.id);
       setChallenges(data);
     } catch (error) {
@@ -36,6 +39,8 @@ export const UserChallenge = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -126,6 +131,10 @@ export const UserChallenge = () => {
       </div>
     );
   };
+
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
 
   if (challenges.length === 0) {
     return (

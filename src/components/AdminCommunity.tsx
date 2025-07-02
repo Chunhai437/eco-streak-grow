@@ -18,12 +18,14 @@ import {
   createCommunity,
   getAllCommunities,
 } from "@/services/CommunityApi";
+import { set } from "date-fns";
+import { Spinner } from "./Spinner/Spinner";
 
 export const AdminCommunity = () => {
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-
+  const [loadingPage, setLoadingPage] = useState(false);
   const [newCommunity, setNewCommunity] = useState({
     name: "",
     description: "",
@@ -38,6 +40,7 @@ export const AdminCommunity = () => {
   }, [user]); // hoặc [user, isAdmin]
   const fetchCommunities = async () => {
     try {
+      setLoadingPage(true);
       const data = await getAllCommunities();
       setCommunities(data);
     } catch (error) {
@@ -46,6 +49,8 @@ export const AdminCommunity = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -77,6 +82,10 @@ export const AdminCommunity = () => {
       });
     }
   };
+
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
 
   return (
     <>

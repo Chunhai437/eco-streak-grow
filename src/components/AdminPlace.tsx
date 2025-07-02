@@ -21,11 +21,13 @@ import {
   Place,
   updatePlace,
 } from "@/services/PlaceApi";
+import { Spinner } from "./Spinner/Spinner";
 
 export const AdminPlace = () => {
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
 
   const [newPlace, setNewPlace] = useState({
@@ -66,6 +68,7 @@ export const AdminPlace = () => {
 
   const fetchPlaces = async () => {
     try {
+      setLoadingPage(true);
       const data = await getAllPlaces();
       setPlaces(data);
     } catch (error) {
@@ -74,6 +77,8 @@ export const AdminPlace = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -293,6 +298,10 @@ export const AdminPlace = () => {
       });
     }
   };
+
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
 
   return (
     <>

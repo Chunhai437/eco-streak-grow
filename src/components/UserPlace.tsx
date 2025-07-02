@@ -9,6 +9,7 @@ import RatingDialog from "./RatingDialog";
 import { getAllPlaces } from "@/services/PlaceApi";
 import { pl } from "date-fns/locale";
 import ReviewDialog from "./ReviewDialog";
+import { Spinner } from "./Spinner/Spinner";
 
 interface UserPlaceProps {
   searchTerm: string;
@@ -17,7 +18,7 @@ interface UserPlaceProps {
 export const UserPlace = ({ searchTerm }: UserPlaceProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
-
+  const [loadingPage, setLoadingPage] = useState(false);
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ export const UserPlace = ({ searchTerm }: UserPlaceProps) => {
   }, [user]);
   const fetchPlaces = async () => {
     try {
+      setLoadingPage(true);
       const data = await getAllPlaces();
       setPlaces(data);
     } catch (error) {
@@ -35,6 +37,8 @@ export const UserPlace = ({ searchTerm }: UserPlaceProps) => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -46,6 +50,10 @@ export const UserPlace = ({ searchTerm }: UserPlaceProps) => {
         tag.toLowerCase().includes(searchTerm.toLowerCase())
       )
   );
+
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
 
   if (filteredPlaces.length === 0) {
     return (

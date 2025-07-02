@@ -7,6 +7,7 @@ import { Calendar, MapPin, Users, Clock, Eye } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import logo from "../assets/avt.png";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 interface NewsArticle {
   id: number;
@@ -30,7 +31,7 @@ interface NewsArticle {
 
 const News = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-
+  const [loadingPage, setLoadingPage] = useState(true);
   // Mock news data - in real app this would come from backend
   const newsArticles: NewsArticle[] = [
     {

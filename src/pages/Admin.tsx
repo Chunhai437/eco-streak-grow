@@ -1,36 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import { useToast } from "@/hooks/use-toast";
-import {
-  Plus,
-  Edit,
-  Trash2,
-  Users,
-  MapPin,
-  Calendar,
-  TrendingUp,
-  Award,
-} from "lucide-react";
+import { Users, MapPin, Calendar, TrendingUp, Award } from "lucide-react";
 import { AdminHabit } from "@/components/AdminHabit";
 import { AdminCommunity } from "@/components/AdminCommunity";
 import { AdminPlace } from "@/components/AdminPlace";
@@ -40,10 +16,13 @@ import { getAllHabit } from "@/services/HabitApi";
 import { getAllPlaces } from "@/services/PlaceApi";
 import { getAllCommunities } from "@/services/CommunityApi";
 import { AdminNews } from "@/components/AdminNews";
+import { Spinner } from "@/components/Spinner/Spinner";
+import { set } from "date-fns";
 
 const Admin = () => {
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [userCount, setUserCount] = useState(0);
   const [habitCount, setHabitCount] = useState(0);
   const [placeCount, setPlaceCount] = useState(0);
@@ -52,6 +31,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchAll = async () => {
       try {
+        setIsLoading(true);
         const [users, habits, places, communities] = await Promise.all([
           getAllUsers(),
           getAllHabit(),
@@ -64,6 +44,8 @@ const Admin = () => {
         setCommunityCount(communities.length);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu thống kê:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 

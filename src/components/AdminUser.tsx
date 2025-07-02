@@ -25,15 +25,18 @@ import { deleteUser, getAllUsers, updateUser, User } from "@/services/UserApi";
 import { set } from "date-fns";
 import { verify } from "crypto";
 import { verifyEmail } from "@/services/AuthApi";
+import { Spinner } from "./Spinner/Spinner";
 
 export const AdminUser = () => {
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
   // New user management state
   const [users, setUsers] = useState([]);
+  const [loadingPage, setLoadingPage] = useState(false);
 
   const fetchUsers = async () => {
     try {
+      setLoadingPage(true);
       const data = await getAllUsers();
       setUsers(data);
     } catch (error) {
@@ -42,6 +45,8 @@ export const AdminUser = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -94,6 +99,10 @@ export const AdminUser = () => {
       });
     }
   };
+
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
 
   return (
     <>

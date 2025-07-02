@@ -15,12 +15,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { createChallenge } from "@/services/Challenge";
 import { useNavigate } from "react-router-dom";
+import { Spinner } from "./Spinner/Spinner";
 
 export const UserHabit = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [habits, setHabits] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
   const [newChallenge, setNewChallenge] = useState({
     title: "",
     targetDay: "",
@@ -38,6 +40,7 @@ export const UserHabit = () => {
   }, [user]);
   const fetchHabits = async () => {
     try {
+      setLoadingPage(true);
       const data = await getAllHabit();
       setHabits(data);
     } catch (error) {
@@ -46,6 +49,8 @@ export const UserHabit = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
   const handleCreateChallenge = (habitId: string) => {
@@ -96,12 +101,15 @@ export const UserHabit = () => {
     setNewChallenge({ title: "", targetDay: "", habitId: "", startDate: "" });
   };
 
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
+
   if (habits.length === 0) {
     return (
       <div className="flex flex-col items-center h-screen text-gray-600 ">
         <h1 className="text-3xl font-bold text-center mt-4">
           Chưa có thói quen gốc để tạo thử thách.
-          
         </h1>
       </div>
     );

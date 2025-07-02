@@ -21,10 +21,15 @@ import { Textarea } from "./ui/textarea";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Spinner } from "./Spinner/Spinner";
+import { fi } from "date-fns/locale";
 
 export const AdminHabit = () => {
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
+
+  const [loadingPage, setLoadingPage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [newHabit, setNewHabit] = useState({
     name: "",
@@ -49,6 +54,7 @@ export const AdminHabit = () => {
   }, [user]); // hoặc [user, isAdmin]
   const fetchHabits = async () => {
     try {
+      setLoadingPage(true);
       const data = await getAllHabit();
       setHabits(data);
     } catch (error) {
@@ -57,6 +63,8 @@ export const AdminHabit = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -64,6 +72,7 @@ export const AdminHabit = () => {
     if (!newHabit.name || !newHabit.description) return;
 
     try {
+      setLoading(true);
       const now = new Date().toISOString();
       const habitToCreate: Habit = {
         ...newHabit,
@@ -85,6 +94,8 @@ export const AdminHabit = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,7 +110,7 @@ export const AdminHabit = () => {
 
   const handleUpdateHabit = async () => {
     if (!editingHabit.name || !editingHabit.description) return;
-
+    setLoading(true);
     // Simulate API call to update habit
     const updatedHabit = {
       name: editingHabit.name,
@@ -114,7 +125,7 @@ export const AdminHabit = () => {
       title: "Cập nhật thói quen thành công!",
       description: `Thói quen "${editingHabit.name}" đã được cập nhật.`,
     });
-
+    setLoading(false);
     setIsEditDialogOpen(false);
     setEditingHabit({ _id: "", name: "", description: "" });
     fetchHabits();
@@ -139,6 +150,10 @@ export const AdminHabit = () => {
       });
     }
   };
+
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -174,8 +189,9 @@ export const AdminHabit = () => {
             <Button
               onClick={handleCreateHabit}
               className="gradient-green text-white"
+              disabled={loading}
             >
-              Tạo thói quen
+              {loading ? "Đang tạo thói quen..." : "Tạo thói quen"}
             </Button>
           </div>
         </CardContent>
@@ -283,8 +299,11 @@ export const AdminHabit = () => {
               <Button
                 onClick={handleUpdateHabit}
                 className="gradient-green text-white"
+                disabled={
+                  !editingHabit.name || !editingHabit.description || loading
+                }
               >
-                Cập nhật
+                {loading ? "Đang cập nhật..." : "Cập nhật"}
               </Button>
             </div>
           </div>

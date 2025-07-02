@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { format, isToday, isYesterday, subDays } from "date-fns";
 import { da, vi } from "date-fns/locale";
+import { Spinner } from "./Spinner/Spinner";
 
 interface DailyLog {
   _id: string;
@@ -23,6 +24,7 @@ export const UserDaily = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [dailyLogs, setDailyLogs] = useState<DailyLog[]>([]);
+  const [loadingPage, setLoadingPage] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -31,6 +33,7 @@ export const UserDaily = () => {
 
   const fetchDailyLogs = async () => {
     try {
+      setLoadingPage(true);
       const data = await getDailyLog(user?.id);
       setDailyLogs(data);
     } catch (error) {
@@ -39,6 +42,8 @@ export const UserDaily = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoadingPage(false);
     }
   };
 
@@ -56,6 +61,10 @@ export const UserDaily = () => {
     if (isToday(date)) return "Hôm nay";
     if (isYesterday(date)) return "Hôm qua";
   };
+  
+  if (loadingPage || !user) {
+    return <Spinner />;
+  }
 
   return (
     <>
