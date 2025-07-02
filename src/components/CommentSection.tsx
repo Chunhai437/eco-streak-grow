@@ -31,8 +31,7 @@ const CommentSection = ({
   const { toast } = useToast();
   const [newComment, setNewComment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // Mock comments data - in real app this would come from backend
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [userMap, setUserMap] = useState<Record<string, User>>({});
 
   useEffect(() => {
@@ -40,6 +39,7 @@ const CommentSection = ({
       fetchCommentsOfPost();
     }
   }, [user, isVisible]);
+
   const fetchCommentsOfPost = async () => {
     try {
       const data = await getAllCommentsOfPost(postId);
@@ -60,13 +60,12 @@ const CommentSection = ({
     await Promise.all(
       comments.map(async (comment) => {
         const userId = comment.userId?._id;
-
         if (userId && !users[userId]) {
           try {
-            const user = await getUserByID(userId);
-            users[userId] = user;
+            const fetchedUser = await getUserByID(userId);
+            users[userId] = fetchedUser;
           } catch {
-            users[userId] = { fullname: "Anonymous User" };
+            users[userId] = { fullname: "Anonymous User" } as User;
           }
         }
       })
@@ -81,20 +80,20 @@ const CommentSection = ({
     try {
       setIsLoading(true);
       await createComment(postId, newComment);
-      setIsLoading(false);
       setNewComment("");
       toast({
         title: "Đã thêm bình luận! 💬",
         description: "Bình luận của bạn đã được đăng thành công.",
       });
-      fetchCommentsOfPost();
+      await fetchCommentsOfPost();
     } catch (error) {
-      setIsLoading(false);
       toast({
         title: "Không thể thêm bình luận",
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -146,10 +145,9 @@ const CommentSection = ({
       {user && (
         <div className="flex space-x-3">
           <Avatar className="w-8 h-8">
-            <AvatarImage src="" alt={user.fullname} />
-            <AvatarFallback>{user.fullname.charAt(0)}</AvatarFallback>
+            <AvatarImage src={""} alt={user.fullname} />
+            <AvatarFallback>{user.fullname?.charAt(0) || "?"}</AvatarFallback>
           </Avatar>
-
           <div className="flex-1 flex space-x-2">
             <Textarea
               placeholder="Viết bình luận..."

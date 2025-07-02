@@ -40,9 +40,9 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-white/80 backdrop-blur-md border-b border-green-100 sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+    <header className="glass-effect border-b border-white/20 sticky top-0 z-50">
+      <div className="container mx-auto px-6">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             {/* <div className="w-8 h-8 gradient-green rounded-full flex items-center justify-center">
@@ -57,19 +57,19 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-2">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-colors ${
+                className={`flex items-center space-x-2 px-4 py-3 rounded-xl transition-all duration-300 ${
                   location.pathname === item.path
                     ? "bg-green-100 text-green-700"
                     : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
               >
-                <item.icon size={18} />
-                <span>{item.name}</span>
+                <item.icon size={20} />
+                <span className="font-medium">{item.name}</span>
               </Link>
             ))}
           </nav>
@@ -91,8 +91,12 @@ const Header = () => {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <div className="flex items-center justify-start gap-2 p-2">
+                <DropdownMenuContent
+                  className="w-64 glass-card border-white/30"
+                  align="end"
+                  forceMount
+                >
+                  <div className="flex items-center justify-start gap-3 p-4">
                     <div className="flex flex-col space-y-1 leading-none">
                       <p className="font-medium">{user.fullname}</p>
                       <p className="w-[200px] truncate text-sm text-muted-foreground">
@@ -125,31 +129,31 @@ const Header = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="md:hidden text-white hover:bg-white/15 rounded-xl"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </Button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-green-100">
+          <div className="md:hidden py-6 border-t border-white/20">
             <nav className="flex flex-col space-y-2">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                     location.pathname === item.path
                       ? "bg-green-100 text-green-700"
                       : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <item.icon size={18} />
-                  <span>{item.name}</span>
+                  <item.icon size={20} />
+                  <span className="font-medium">{item.name}</span>
                 </Link>
               ))}
             </nav>
