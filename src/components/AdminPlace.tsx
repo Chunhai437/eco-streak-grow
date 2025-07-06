@@ -22,6 +22,7 @@ import {
   updatePlace,
 } from "@/services/PlaceApi";
 import { Spinner } from "./Spinner/Spinner";
+import ImageUploader from "./ImageLoader";
 
 export const AdminPlace = () => {
   const { user, isAdmin } = useAuth();
@@ -280,7 +281,7 @@ export const AdminPlace = () => {
   const handleDeletePlace = async (placeId: string) => {
     const place = places.find((p) => p._id === placeId);
     if (!place) return;
-    if (!window.confirm("Bạn có chắc chắn muốn xóa thói quen này không?"))
+    if (!window.confirm("Bạn có chắc chắn muốn xóa địa điểm này không?"))
       return;
     try {
       await deletePlace(placeId);
@@ -351,12 +352,11 @@ export const AdminPlace = () => {
               setNewPlace({ ...newPlace, address: e.target.value })
             }
           />
-          <Input
-            placeholder="URL hình ảnh"
-            value={newPlace.image}
-            onChange={(e) =>
-              setNewPlace({ ...newPlace, image: e.target.value })
-            }
+          <ImageUploader
+            disabled={loading}
+            onImageUploaded={(url) => {
+              setNewPlace((prev) => ({ ...prev, image: url }));
+            }}
           />
           <Input
             placeholder="Tags (cách nhau bởi dấu phẩy)"
@@ -586,18 +586,12 @@ export const AdminPlace = () => {
               />
             </div>
 
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
-                URL hình ảnh
-              </label>
-              <Input
-                placeholder="URL hình ảnh"
-                value={editingPlace.image}
-                onChange={(e) =>
-                  setEditingPlace({ ...editingPlace, image: e.target.value })
-                }
-              />
-            </div>
+            <ImageUploader
+              disabled={loadingUpdate}
+              onImageUploaded={(url) =>
+                setEditingPlace((prev) => ({ ...prev, image: url }))
+              }
+            />
 
             <div>
               <label className="text-sm font-medium text-gray-700 mb-2 block">

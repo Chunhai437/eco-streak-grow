@@ -10,7 +10,7 @@ import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "./ui/badge";
-import { Heart, MessageCircle, Share2 } from "lucide-react";
+import { Heart, ImageIcon, MessageCircle, Share2 } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import CommentSection from "./CommentSection";
 import {
@@ -25,6 +25,9 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { getUserByID, User } from "@/services/UserApi";
 import { Spinner } from "./Spinner/Spinner";
+import { uploadImage } from "@/services/MediaApi";
+import { is } from "date-fns/locale";
+import ImageUploader from "./ImageLoader";
 
 dayjs.extend(relativeTime);
 
@@ -110,6 +113,7 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
 
     setUserMap(users);
   };
+
   const handleCreatePost = async () => {
     if (!newPost.trim() || !user) return;
 
@@ -208,12 +212,9 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
               onChange={(e) => setNewPost(e.target.value)}
               className="min-h-[100px]"
             />
-            <input
-              type="text"
-              placeholder="URL ảnh (tùy chọn)"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+            <ImageUploader
+              onImageUploaded={(url) => setImageUrl(url)}
+              disabled={isLoading}
             />
             <div className="flex items-center justify-end">
               <Button
@@ -349,5 +350,3 @@ export const CommunityPost = ({ communityId }: CommunityPostProps) => {
     </div>
   );
 };
-
-// Định nghĩa User type an toàn hơn
