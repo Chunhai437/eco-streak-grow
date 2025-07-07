@@ -93,9 +93,9 @@ export const UserHabit = () => {
     setIsLoading(false);
     toast({
       title: "Tạo thử thách thành công!",
-      description: `Thử thách "${newChallenge.title}" trong ${targetDays} ngày đã được tạo.`,
+      description: `Thử thách "${newChallenge.title}" trong ${targetDays} ngày đã được tạo.
+      Vui lòng chuyển sang phần thử thách để xem 😘`,
     });
-    window.location.href = "/habits";
     setIsChallengeDialogOpen(false);
     setNewChallenge({ title: "", targetDay: "", habitId: "", startDate: "" });
   };
