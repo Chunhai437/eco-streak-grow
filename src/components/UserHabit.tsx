@@ -95,9 +95,8 @@ export const UserHabit = () => {
       title: "Tạo thử thách thành công!",
       description: `Thử thách "${newChallenge.title}" trong ${targetDays} ngày đã được tạo.`,
     });
-    window.location.reload();
-
     setIsChallengeDialogOpen(false);
+    window.location.reload();
     setNewChallenge({ title: "", targetDay: "", habitId: "", startDate: "" });
   };
 

@@ -51,32 +51,34 @@ export const UserChallenge = () => {
   ) => {
     if (isCheckedToday) return alert("Thử thách này đã hoàn thành rồi!");
 
-    await checkInChallenge(challengeId, user?.id);
-    // Cập nhật state ngay sau khi check-in thành công
-    const today = new Date().toISOString();
+    try {
+      await checkInChallenge(challengeId, user?.id);
+      // Cập nhật state ngay sau khi check-in thành công
+      const today = new Date().toISOString();
 
-    setChallenges((prev) =>
-      prev.map((ch) =>
-        ch._id === challengeId
-          ? {
-              ...ch,
-              completedDays: [...ch.completedDays, today],
-              streak: ch.streak + 1,
-            }
-          : ch
-      )
-    );
-
-    toast({
-      title: "Tuyệt vời! 🎉",
-      description: `Bạn đã hoàn thành thử thách "${title}" hôm nay!`,
-    });
-
-    toast({
-      title: "Tuyệt vời! 🎉",
-      description: `Bạn đã hoàn thành thử thách "${title} hôm nay" !`,
-    });
-    // fetchChallenges();
+      setChallenges((prev) =>
+        prev.map((ch) =>
+          ch._id === challengeId
+            ? {
+                ...ch,
+                completedDays: [...ch.completedDays, today],
+                streak: ch.streak + 1,
+              }
+            : ch
+        )
+      );
+      toast({
+        title: "Tuyệt vời! 🎉",
+        description: `Bạn đã hoàn thành thử thách "${title}" hôm nay!`,
+      });
+      // fetchChallenges();
+    } catch (error) {
+      toast({
+        title: "Lỗi khi check-in",
+        description: "Bạn đã hoàn thành thử thách này hôm nay rồi!",
+        variant: "destructive",
+      });
+    }
   };
 
   const renderPlantProgress = (streak: number, total: number) => {
@@ -155,6 +157,7 @@ export const UserChallenge = () => {
           const isCheckedToday = challenge.completedDays.some((day: string) =>
             isSameDay(day, new Date().toISOString())
           );
+          console.log(isCheckedToday);
 
           return (
             <Card key={challenge._id} className="glass-effect">
