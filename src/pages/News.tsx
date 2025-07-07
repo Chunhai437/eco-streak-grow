@@ -390,101 +390,107 @@ const News = () => {
         {/* News Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredArticles.map((article) => (
-            <Card
-              key={article.id}
-              className="hover:shadow-lg transition-shadow overflow-hidden"
-            >
-              <div className="aspect-video overflow-hidden">
-                <img
-                  src={article.image}
-                  alt={article.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between mb-2">
-                  <Badge className={getCategoryBadgeColor(article.category)}>
-                    {article.category === "event" && "Sự kiện"}
-                    {article.category === "campaign" && "Chiến dịch"}
-                    {article.category === "workshop" && "Workshop"}
-                    {article.category === "contest" && "Cuộc thi"}
-                    {article.category === "forum" && "Diễn đàn"}
-                    {article.category === "exhibition" && "Triển lãm"}
-                    {article.category === "challenge" && "Thử thách"}
-                    {article.category === "camp" && "Trại hè"}
-                    {article.category === "fair" && "Hội chợ"}
-                  </Badge>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Eye className="w-4 h-4 mr-1" />
-                    {article.views}
-                  </div>
+            <Link to={`/news/${article.id}`} key={article.id}>
+              <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+                <div className="aspect-video overflow-hidden">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
 
-                <CardTitle className="text-lg leading-tight hover:text-green-600 transition-colors">
-                  <CardTitle>
-                    <Link to={`/news/${article.id}`}>{article.title}</Link>
-                  </CardTitle>
-                </CardTitle>
-              </CardHeader>
-
-              <CardContent className="pt-0">
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                  {article.excerpt}
-                </p>
-
-                {/* Event Details */}
-                {article.eventDate && (
-                  <div className="space-y-2 mb-4 text-sm text-gray-600">
-                    <div className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-2 text-green-600" />
-                      {formatDate(article.eventDate)}
-                    </div>
-                    {article.location && (
-                      <div className="flex items-center">
-                        <MapPin className="w-4 h-4 mr-2 text-green-600" />
-                        {article.location}
-                      </div>
-                    )}
-                    {article.participants && (
-                      <div className="flex items-center">
-                        <Users className="w-4 h-4 mr-2 text-green-600" />
-                        {article.participants} người tham gia
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {article.tags.map((tag, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs">
-                      #{tag}
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge className={getCategoryBadgeColor(article.category)}>
+                      {article.category === "event" && "Sự kiện"}
+                      {article.category === "campaign" && "Chiến dịch"}
+                      {article.category === "workshop" && "Workshop"}
+                      {article.category === "contest" && "Cuộc thi"}
+                      {article.category === "forum" && "Diễn đàn"}
+                      {article.category === "exhibition" && "Triển lãm"}
+                      {article.category === "challenge" && "Thử thách"}
+                      {article.category === "camp" && "Trại hè"}
+                      {article.category === "fair" && "Hội chợ"}
                     </Badge>
-                  ))}
-                </div>
-
-                {/* Author & Date */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div className="flex items-center space-x-2">
-                    <Avatar className="w-6 h-6">
-                      <AvatarImage src={logo} alt={article.author.name} />
-                      <AvatarFallback>
-                        {article.author.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="text-xs">
-                      <div className="font-medium">{article.author.name}</div>
-                      <div className="text-gray-500">{article.author.role}</div>
+                    <div className="flex items-center text-sm text-gray-500">
+                      <Eye className="w-4 h-4 mr-1" />
+                      {article.views}
                     </div>
                   </div>
-                  <div className="flex items-center text-xs text-gray-500">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {formatDate(article.publishedAt)}
+
+                  <CardTitle className="text-lg leading-tight hover:text-green-600 transition-colors">
+                    <CardTitle>
+                      {/* <Link to={`/news/${article.id}`}>{article.title}</Link> */}
+                      {article.title}
+                    </CardTitle>
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent className="pt-0">
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    {article.excerpt}
+                  </p>
+
+                  {/* Event Details */}
+                  {article.eventDate && (
+                    <div className="space-y-2 mb-4 text-sm text-gray-600">
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2 text-green-600" />
+                        {formatDate(article.eventDate)}
+                      </div>
+                      {article.location && (
+                        <div className="flex items-center">
+                          <MapPin className="w-4 h-4 mr-2 text-green-600" />
+                          {article.location}
+                        </div>
+                      )}
+                      {article.participants && (
+                        <div className="flex items-center">
+                          <Users className="w-4 h-4 mr-2 text-green-600" />
+                          {article.participants} người tham gia
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {article.tags.map((tag, index) => (
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="text-xs"
+                      >
+                        #{tag}
+                      </Badge>
+                    ))}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+
+                  {/* Author & Date */}
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex items-center space-x-2">
+                      <Avatar className="w-6 h-6">
+                        <AvatarImage src={logo} alt={article.author.name} />
+                        <AvatarFallback>
+                          {article.author.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="text-xs">
+                        <div className="font-medium">{article.author.name}</div>
+                        <div className="text-gray-500">
+                          {article.author.role}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {formatDate(article.publishedAt)}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
 

@@ -86,7 +86,7 @@ export const UserChallenge = () => {
       { stage: 0, emoji: "🌱", name: "Mầm cây" },
       { stage: Math.floor(total * 0.3), emoji: "🌿", name: "Lá non" },
       { stage: Math.floor(total * 0.6), emoji: "🌳", name: "Cây nhỏ" },
-      { stage: total, emoji: "🌸", name: "Hoa đăl" },
+      { stage: total, emoji: "🌸", name: "Bông hoa" },
     ];
 
     const currentStage = stages.reduce((prev, curr) =>
