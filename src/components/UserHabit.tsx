@@ -92,12 +92,12 @@ export const UserHabit = () => {
     await createChallenge(newChallengeData);
     setIsLoading(false);
     toast({
-      title: "Tạo thử thách thành công!",
-      description: `Thử thách "${newChallenge.title}" trong ${targetDays} ngày đã được tạo.
-      Vui lòng chuyển sang phần thử thách để xem 😘`,
+      title: "Tạo thử thách thành công! 🎉",
+      description: `Thử thách "${newChallenge.title}" trong ${targetDays} ngày đã được tạo!`,
     });
     setIsChallengeDialogOpen(false);
     setNewChallenge({ title: "", targetDay: "", habitId: "", startDate: "" });
+    window.location.reload();
   };
 
   if (loadingPage || !user) {
