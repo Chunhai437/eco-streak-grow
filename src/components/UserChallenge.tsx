@@ -13,7 +13,6 @@ import { Progress } from "./ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { checkInChallenge, getUserChallenge } from "@/services/Challenge";
-import { isSameDay } from "date-fns";
 import { Spinner } from "./Spinner/Spinner";
 
 export const UserChallenge = () => {
@@ -106,33 +105,33 @@ export const UserChallenge = () => {
     );
   };
 
-  const renderPuzzleProgress = (streak: number, total: number) => {
-    const completedPieces = streak;
-    const totalPieces = total;
+  // const renderPuzzleProgress = (streak: number, total: number) => {
+  //   const completedPieces = streak;
+  //   const totalPieces = total;
 
-    return (
-      <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg">
-        <div className="grid grid-cols-6 gap-1 max-w-48 mx-auto mb-4">
-          {Array.from({ length: totalPieces }).map((_, index) => (
-            <div
-              key={index}
-              className={`aspect-square rounded-sm border-2 ${
-                index < completedPieces
-                  ? "bg-gradient-to-br from-purple-400 to-pink-400 border-purple-300"
-                  : "bg-gray-100 border-gray-200"
-              }`}
-            />
-          ))}
-        </div>
-        <div className="text-lg font-semibold text-purple-700">
-          {completedPieces}/{totalPieces} mảnh ghép
-        </div>
-        <div className="text-sm text-gray-600 mt-2">
-          Hoàn thành puzzle để nhận voucher! 🧩
-        </div>
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg">
+  //       <div className="grid grid-cols-6 gap-1 max-w-48 mx-auto mb-4">
+  //         {Array.from({ length: totalPieces }).map((_, index) => (
+  //           <div
+  //             key={index}
+  //             className={`aspect-square rounded-sm border-2 ${
+  //               index < completedPieces
+  //                 ? "bg-gradient-to-br from-purple-400 to-pink-400 border-purple-300"
+  //                 : "bg-gray-100 border-gray-200"
+  //             }`}
+  //           />
+  //         ))}
+  //       </div>
+  //       <div className="text-lg font-semibold text-purple-700">
+  //         {completedPieces}/{totalPieces} mảnh ghép
+  //       </div>
+  //       <div className="text-sm text-gray-600 mt-2">
+  //         Hoàn thành puzzle để nhận voucher! 🧩
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   if (loadingPage || !user) {
     return <Spinner />;
@@ -154,9 +153,15 @@ export const UserChallenge = () => {
       <div className="grid gap-6">
         {challenges.map((challenge) => {
           const progress = (challenge.streak / challenge.targetDays) * 100;
-          const isCheckedToday = challenge.completedDays.some((day: string) =>
-            isSameDay(day, new Date().toISOString())
-          );
+          console.log(challenge.completedDays);
+          const now = new Date().toISOString().split("T")[0]; // "2025-07-08"
+
+          const isCheckedToday = challenge.completedDays.some((day: string) => {
+            const completedDay = day.split("T")[0]; // Cắt lấy ngày: "2025-07-05"
+            return completedDay === now;
+          });
+
+          console.log(now);
           console.log(isCheckedToday);
 
           return (
